@@ -12,6 +12,8 @@ namespace ElectronicDepartment.DataAccess
 
         public virtual DbSet<Student> Students { get; set; } = default;
 
+        public virtual DbSet<Teacher> Teachers { get; set; } = default;
+        
         public virtual DbSet<Lesson> Lessons { get; set; } = default;
     }
 }
