@@ -6,7 +6,10 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
 {
     public static class ApiResponceHelper
     {
-        public static async Task<ApiResponce<D>> CreateApiResponceAsync<T, D>(this IQueryable<T> dataQuery, Expression<Func<T, D>> selector, int take = 10, int skip = 0)
+        public static async Task<ApiResponce<D>> CreateApiResponceAsync<T, D>(this IQueryable<T> dataQuery,
+            Expression<Func<T, D>> selector,
+            int take = 10,
+            int skip = 0)
         {
             var result = dataQuery
                 .Take(skip..take)

@@ -12,6 +12,10 @@ namespace ElectronicDepartment.DomainEntities
 
         public virtual Course Course { get; set; } = default;
 
+        public int CourseTeacherId { get; set; }
+
+        public virtual CourseTeacher CourseTeacher { get; set; } = default!;
+
         public LessonType LessonType { get; set; }
 
         public TimeSpan TimeSpan { get; set; }

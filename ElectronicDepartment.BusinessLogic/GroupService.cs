@@ -18,13 +18,15 @@ namespace ElectronicDepartment.BusinessLogic
             _context = context;
         }
 
-        public async Task CreateGroup(CreateGroupViewModel viewModel)
+        public async Task<int> CreateGroup(CreateGroupViewModel viewModel)
         {
             var group = new Group();
             Map(group, viewModel);
 
-            _context.Groups.Add(group);
+            await _context.Groups.AddAsync(group);
             await _context.SaveChangesAsync();
+
+            return group.Id;
         }
 
         public async Task<GetGroupViewModel> GetGroup(int id)
@@ -78,12 +80,11 @@ namespace ElectronicDepartment.BusinessLogic
         }
     }
 
-
     public interface IGroupService
     {
         public Task<GetGroupViewModel> GetGroup(int id);
 
-        public Task CreateGroup(CreateGroupViewModel viewModel);
+        public Task<int> CreateGroup(CreateGroupViewModel viewModel);
 
         public Task UpdateGroup(UpdateGroupViewModel viewModel);
     }

@@ -12,6 +12,8 @@ namespace ElectronicDepartment.DomainEntities
 
         public virtual Teacher Teacher { get; set; } = default!;
 
+        public virtual List<Lesson> Lessons { get; set; } = new List<Lesson>();
+
         public CourseTeacherFlag CourseTeacherFlag { get; set; }
     }
 }
