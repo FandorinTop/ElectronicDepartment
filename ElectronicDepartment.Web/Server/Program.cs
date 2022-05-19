@@ -14,21 +14,28 @@ namespace Company.WebApplication1
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                options => options.UseLazyLoadingProxies()
+                .UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
+
+            builder.Services.AddIdentityCore<ApplicationUser>(opts =>
+            {
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireLowercase = false;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             builder.Services.AddInjection();
             // Add services to the container.
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-            builder.Services.AddDbContext<ApplicationDbContext>(
-                options => options.UseLazyLoadingProxies()
-                .UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
-
-            builder.Services.AddIdentityCore<ApplicationUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
             builder.Services.AddSwaggerGen();
+            
 
             var app = builder.Build();
 
@@ -57,6 +64,9 @@ namespace Company.WebApplication1
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseRouting();
 
             app.MapRazorPages();
@@ -72,11 +82,13 @@ namespace Company.WebApplication1
     {
         public static void AddInjection(this IServiceCollection services)
         {
+            services.AddScoped<IUserManagerService, ManagerService>();
             services.AddScoped<ICafedraService, CafedraService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ICourseTeacherService, CourseTeacherService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<IMarkService, MarkService>();
+            services.AddScoped<IGroupService, GroupService>();
         }
     }
 }

@@ -11,17 +11,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicDepartment.BusinessLogic
 {
-    public class ManagerService : ApplicationUserService, IManagerService
+    public class ManagerService : ApplicationUserService, IUserManagerService
     {
-        public ApplicationDbContext _context;
-        public UserManager<ApplicationUser> userManager;
-        public RoleManager<ApplicationUser> roleManager;
+        public const string STUDENTROLE = "student";
+        public const string MANAGERROLE = "manager";
+        public const string TEACHERROLE = "teacher";
 
-        public ManagerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationUser> roleManager)
+        public ApplicationDbContext _context;
+        public UserManager<ApplicationUser> _userManager;
+        public RoleManager<IdentityRole> _roleManager;
+
+        public ManagerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
-            this.userManager = userManager;
-            this.roleManager = roleManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<GetStudentViewModel> Get(string id)
@@ -40,7 +44,51 @@ namespace ElectronicDepartment.BusinessLogic
             Map(student, viewModel);
         }
 
-        private void Map(Student student, UpdateStudentViewModel viewModel)
+        public async Task<string> CreateStudent(CreateStudentViewModel viewModel)
+        {
+            var student = new Student();
+            Map(student, viewModel);
+
+            var result = await _userManager.CreateAsync(student, "a"+"A"+"!"+student.GetHashCode().ToString());
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(student, STUDENTROLE);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return student.Id;
+        }
+
+        public async Task UpdateStudent(UpdateStudentViewModel viewModel)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
+            DbNullReferenceException.ThrowExceptionIfNull(student, nameof(viewModel.Id), viewModel.Id);
+
+            Map(student, viewModel);
+        }
+
+        public Task<string> CreateTeacher(CreateTeacherViewModel viewModel)
+        {
+            return default;
+        }
+
+        public async Task UpdateTeacher(UpdateTeacherViewModel viewModel)
+        {
+
+        }
+
+        public Task<string> CreateManager(CreateManagerViewModel viewModel)
+        {
+            return default;
+        }
+
+        public async Task UpdateManager(UpdateManagerViewModel viewModel)
+        {
+        }
+
+        private void Map(Student student, BaseStudentViewModel viewModel)
         {
             MapApplicationUser(student, viewModel);
             student.GroupId = viewModel.GroupId;
@@ -58,35 +106,5 @@ namespace ElectronicDepartment.BusinessLogic
             GroupId = student.GroupId,
             PhoneNumber = student.PhoneNumber
         };
-
-        public Task<string> CreateStudent(CreateStudentViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateStudent(UpdateStudentViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> CreateTeacher(CreateTeacherViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateTeacher(UpdateTeacherViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> CreateManager(CreateManagerViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateManager(UpdateManagerViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

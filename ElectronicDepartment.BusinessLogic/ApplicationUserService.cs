@@ -7,8 +7,11 @@ namespace ElectronicDepartment.BusinessLogic
     {
         protected virtual void MapApplicationUser(in ApplicationUser user, in BaseUserViewModel viewModel)
         {
+            user.EmailConfirmed = true;
+
             user.PhoneNumber = viewModel.PhoneNumber;
             user.Email = viewModel.Email;
+            user.UserName = viewModel.Email;
             user.BirthDay = viewModel.BirthDay;
             user.Gender = viewModel.Gender;
             user.FirstName = viewModel.FirstName;

@@ -4,7 +4,7 @@ using ElectronicDepartment.Web.Shared.User.Teacher;
 
 namespace ElectronicDepartment.BusinessLogic
 {
-    public interface IManagerService
+    public interface IUserManagerService
     {
         public Task<string> CreateStudent(CreateStudentViewModel viewModel);
 
