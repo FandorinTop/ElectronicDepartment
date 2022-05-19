@@ -11,8 +11,6 @@ namespace ElectronicDepartment.Web.Shared.Lesson.Responce
     {
         public int Id { get; set; }
 
-        public int GroupId { get; set; }
-
         public int CourseTeacherId { get; set; }
 
         public LessonType LessonType { get; set; }

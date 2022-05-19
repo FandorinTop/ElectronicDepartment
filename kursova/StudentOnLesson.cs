@@ -2,7 +2,7 @@
 
 namespace ElectronicDepartment.DomainEntities
 {
-    public class Mark : BaseEntity
+    public class StudentOnLesson : BaseEntity
     {
         public int LessonId { get; set; }
         public virtual Lesson Lesson { get; set; } = default!;
@@ -11,6 +11,6 @@ namespace ElectronicDepartment.DomainEntities
         public virtual Student Student { get; set; } = default!;
 
         [Range(0, 100)]
-        public int Value { get; set; }
+        public int? Mark { get; set; } = null;
     }
 }

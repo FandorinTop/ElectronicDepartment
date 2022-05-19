@@ -14,7 +14,7 @@ namespace ElectronicDepartment.Web.Shared.Mark.Responce
 
         public int LessonId { get; set; }
 
-        public int Value { get; set; }
+        public int? Value { get; set; }
 
         public DateTime CreatedAt { get; set; }
     }

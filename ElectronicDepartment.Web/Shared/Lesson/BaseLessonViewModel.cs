@@ -9,8 +9,6 @@ namespace ElectronicDepartment.Web.Shared.Lesson
 {
     public class BaseLessonViewModel
     {
-        public int GroupId { get; set; }
-
         public int CourseTeacherId { get; set; }
 
         public LessonType LessonType { get; set; }

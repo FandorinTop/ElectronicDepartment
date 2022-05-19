@@ -20,7 +20,7 @@ namespace ElectronicDepartment.BusinessLogic
         {
             await Validate(viewModel);
 
-            var mark = new Mark();
+            var mark = new StudentOnLesson();
             Map(mark, viewModel);
 
             await _context.Marks.AddAsync(mark);
@@ -53,13 +53,13 @@ namespace ElectronicDepartment.BusinessLogic
             throw new NotImplementedException();
         }
 
-        private GetMarkResponce ExtractMarkResponce(Mark item) => new GetMarkResponce()
+        private GetMarkResponce ExtractMarkResponce(StudentOnLesson item) => new GetMarkResponce()
         {
             Id = item.Id,
             StudentId = item.StudentId,
             LessonId = item.LessonId,
             CreatedAt = item.CreatedAt,
-            Value = item.Value
+            Value = item.Mark
         };
 
         private async Task Validate(BaseMarkViewModel viewModel)
@@ -80,9 +80,9 @@ namespace ElectronicDepartment.BusinessLogic
             DbNullReferenceException.ThrowExceptionIfNull(student, nameof(viewModel.StudentId), viewModel.StudentId.ToString());
         }
 
-        private void Map(Mark mark, BaseMarkViewModel viewModel)
+        private void Map(StudentOnLesson mark, BaseMarkViewModel viewModel)
         {
-            mark.Value = viewModel.Value;
+            mark.Mark = viewModel.Value;
             mark.StudentId = viewModel.StudentId;
             mark.LessonId = viewModel.LessonId;
         }

@@ -33,7 +33,6 @@ namespace ElectronicDepartment.BusinessLogic
         {
             lesson.CourseTeacherId = viewModel.CourseTeacherId;
             lesson.LessonType = viewModel.LessonType;
-            lesson.GroupId = viewModel.GroupId;
             lesson.TimeSpan = viewModel.TimeSpan;
         }
 
@@ -61,7 +60,6 @@ namespace ElectronicDepartment.BusinessLogic
         private GetLessonViewModel ExtractViewModel(Lesson item) => new GetLessonViewModel()
         {
             Id = item.Id,
-            GroupId = item.GroupId,
             CourseTeacherId = item.CourseTeacherId,
             LessonType = item.LessonType,
             CreatedAt = item.CreatedAt,
@@ -70,14 +68,7 @@ namespace ElectronicDepartment.BusinessLogic
 
         private async Task Validate(BaseLessonViewModel viewModel)
         {
-            await ValidateGroup(viewModel);
             await ValidateCourseTeacher(viewModel);
-        }
-
-        private async Task ValidateGroup(BaseLessonViewModel viewModel)
-        {
-            var group = await _context.Groups.FirstOrDefaultAsync(item => item.Id == viewModel.GroupId);
-            DbNullReferenceException.ThrowExceptionIfNull(group, nameof(viewModel.GroupId), viewModel.GroupId.ToString());
         }
 
         private async Task ValidateCourseTeacher(BaseLessonViewModel viewModel)

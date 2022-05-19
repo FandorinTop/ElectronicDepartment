@@ -15,6 +15,6 @@ namespace ElectronicDepartment.Web.Shared.Mark
         public int LessonId { get; set; }
 
         [Range(0, 100)]
-        public int Value { get; set; }
+        public int? Value { get; set; }
     }
 }
