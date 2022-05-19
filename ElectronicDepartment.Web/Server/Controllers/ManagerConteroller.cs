@@ -1,5 +1,7 @@
 ﻿using ElectronicDepartment.BusinessLogic;
+using ElectronicDepartment.Web.Shared.User.Manager;
 using ElectronicDepartment.Web.Shared.User.Student;
+using ElectronicDepartment.Web.Shared.User.Teacher;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicDepartment.Web.Server.Controllers
@@ -23,20 +25,44 @@ namespace ElectronicDepartment.Web.Server.Controllers
             return Ok(id.ToString());
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Get(int id)
-        //{
-        //    var ManagerViewModel = await _managerService.GetStudent(id);
+        [HttpPut]
+        public async Task<IActionResult> UpdateStudent(UpdateStudentViewModel viewModel)
+        {
+            await _managerService.UpdateStudent(viewModel);
 
-        //    return Ok(ManagerViewModel);
-        //}
+            return Ok();
+        }
 
-        //[HttpPut]
-        //public async Task<IActionResult> Update(UpdateManagerViewModel viewModel)
-        //{
-        //    await _managerService.UpdateStudent(viewModel);
+        [HttpPost]
+        public async Task<IActionResult> CreateManager(CreateManagerViewModel viewModel)
+        {
+            var id = await _managerService.CreateManager(viewModel);
 
-        //    return Ok(true);
-        //}
+            return Ok(id.ToString());
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateManager(UpdateManagerViewModel viewModel)
+        {
+            await _managerService.UpdateManager(viewModel);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTeacher(CreateTeacherViewModel viewModel)
+        {
+            var id = await _managerService.CreateTeacher(viewModel);
+
+            return Ok(id.ToString());
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTeacher(UpdateTeacherViewModel viewModel)
+        {
+            await _managerService.UpdateTeacher(viewModel);
+
+            return Ok();
+        }
     }
 }

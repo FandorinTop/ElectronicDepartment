@@ -153,7 +153,7 @@ namespace ElectronicDepartment.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cafedras");
+                    b.ToTable("Cafedras", (string)null);
                 });
 
             modelBuilder.Entity("ElectronicDepartment.DomainEntities.Course", b =>
@@ -182,7 +182,7 @@ namespace ElectronicDepartment.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("ElectronicDepartment.DomainEntities.CourseTeacher", b =>
@@ -212,7 +212,7 @@ namespace ElectronicDepartment.DataAccess.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("CourseTeachers");
+                    b.ToTable("CourseTeachers", (string)null);
                 });
 
             modelBuilder.Entity("ElectronicDepartment.DomainEntities.Group", b =>
@@ -236,7 +236,7 @@ namespace ElectronicDepartment.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("ElectronicDepartment.DomainEntities.Lesson", b =>
@@ -272,7 +272,7 @@ namespace ElectronicDepartment.DataAccess.Migrations
 
                     b.HasIndex("CourseTeacherId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("ElectronicDepartment.DomainEntities.StudentOnLesson", b =>
@@ -305,7 +305,7 @@ namespace ElectronicDepartment.DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Marks");
+                    b.ToTable("Marks", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

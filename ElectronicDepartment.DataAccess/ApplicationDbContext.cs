@@ -23,6 +23,10 @@ namespace ElectronicDepartment.DataAccess
 
         public virtual DbSet<Cafedra> Cafedras { get; set; } = default!;
 
+        public virtual DbSet<Manager> Managers { get; set; } = default!;
+
+        public virtual DbSet<Admin> Admins { get; set; } = default!;
+
         public ApplicationDbContext()
         {
         }

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.Extensions.DependencyInjection;
 using ElectronicDepartment.DomainEntities;
 using Microsoft.AspNetCore.Identity;
+using static ElectronicDepartment.BusinessLogic.Helpers.FirstInit;
+using static ElectronicDepartment.Common.Constants;
 
 namespace Company.WebApplication1
 {
@@ -73,11 +75,12 @@ namespace Company.WebApplication1
             app.MapControllers();
             app.MapFallbackToFile("index.html");
 
+            StartupConfiguration.InitDb(app);
+
             app.Run();
         }
-
-        
     }
+
     public static class StartupConfiguration
     {
         public static void AddInjection(this IServiceCollection services)
@@ -90,5 +93,20 @@ namespace Company.WebApplication1
             services.AddScoped<IMarkService, MarkService>();
             services.AddScoped<IGroupService, GroupService>();
         }
+
+        public static void InitDb(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                //Resolve ASP .NET Core Identity with DI help
+                var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+                InitRoles(roleManager, GetRoles()).GetAwaiter().GetResult();
+                InitAdmin(userManager).GetAwaiter().GetResult();                // do you things here
+            }
+
+            
+        }
+
     }
 }
