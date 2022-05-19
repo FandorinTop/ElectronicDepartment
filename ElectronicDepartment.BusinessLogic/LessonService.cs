@@ -2,6 +2,7 @@
 using ElectronicDepartment.DataAccess;
 using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.Lesson;
+using ElectronicDepartment.Web.Shared.Lesson.Responce;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicDepartment.BusinessLogic
@@ -33,6 +34,7 @@ namespace ElectronicDepartment.BusinessLogic
             lesson.CourseTeacherId = viewModel.CourseTeacherId;
             lesson.LessonType = viewModel.LessonType;
             lesson.GroupId = viewModel.GroupId;
+            lesson.TimeSpan = viewModel.TimeSpan;
         }
 
         public async Task UpdateLesson(UpdateLessonViewModel viewModel)
@@ -47,6 +49,24 @@ namespace ElectronicDepartment.BusinessLogic
             await _context.AddAsync(lesson);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<GetLessonViewModel> GetLesson(int id)
+        {
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(item => item.Id == id);
+            DbNullReferenceException.ThrowExceptionIfNull(lesson, nameof(id), id.ToString());
+
+            return ExtractLessonViewModel(lesson);
+        }
+
+        private GetLessonViewModel ExtractLessonViewModel(Lesson item) => new GetLessonViewModel()
+        {
+            Id = item.Id,
+            GroupId = item.GroupId,
+            CourseTeacherId = item.CourseTeacherId,
+            LessonType = item.LessonType,
+            CreatedAt = item.CreatedAt,
+            TimeSpan = item.TimeSpan
+        };
 
         private async Task Validate(BaseLessonViewModel viewModel)
         {
@@ -63,14 +83,7 @@ namespace ElectronicDepartment.BusinessLogic
         private async Task ValidateCourseTeacher(BaseLessonViewModel viewModel)
         {
             var courseTeacher = await _context.Teachers.FirstOrDefaultAsync(item => item.Id == viewModel.CourseTeacherId.ToString());
-            DbNullReferenceException.ThrowExceptionIfNull(courseTeacher, nameof(viewModel.CourseTeacherId), viewModel.StudentId.ToString());
+            DbNullReferenceException.ThrowExceptionIfNull(courseTeacher, nameof(viewModel.CourseTeacherId), viewModel.CourseTeacherId.ToString());
         }
-    }
-
-    public interface ILessonService
-    {
-        public Task<int> CreateLesson(CreateLessonViewModel viewModel);
-
-        public Task UpdateLesson(UpdateLessonViewModel viewModel);
     }
 }
