@@ -66,7 +66,7 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
                 result += $" && ";
             }
 
-            result += $"{filter.Field} == {filter.Value}";
+            result += $"{filter.Field}=={filter.Value}";
 
             return result;
         }

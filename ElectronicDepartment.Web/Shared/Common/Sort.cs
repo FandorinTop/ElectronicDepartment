@@ -2,11 +2,16 @@
 
 namespace ElectronicDepartment.Web.Shared.Common
 {
-    public class Sort
+    public class SortingRequest
     {
-        [Required]
-        public string Field { get; set; } = default!;
+        /// <summary>
+        /// Sorting Column name (or null if none set)
+        /// </summary>
+        public string SortColumn { get; set; }
 
-        public SortingOrder OrderBy { get; set; } = SortingOrder.ASC;
+        /// <summary>
+        /// Sorting Order ("ASC", "DESC" or null if none set)
+        /// </summary>
+        public string SortOrder { get; set; } = "ASC";
     }
 }

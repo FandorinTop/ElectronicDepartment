@@ -1,4 +1,5 @@
-﻿using ElectronicDepartment.Common.Exceptions;
+﻿using ElectronicDepartment.BusinessLogic.Helpers;
+using ElectronicDepartment.Common.Exceptions;
 using ElectronicDepartment.DataAccess;
 using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.User;
@@ -9,6 +10,7 @@ using ElectronicDepartment.Web.Shared.User.Teacher;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static ElectronicDepartment.Common.Constants;
+using ElectronicDepartment.Web.Shared.Common;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -45,7 +47,7 @@ namespace ElectronicDepartment.BusinessLogic
                 return;
             }
 
-            throw new Exception(result.Errors.Select(item => item.Description).Aggregate("", (res,  item) => res += item));
+            throw new Exception(result.Errors.Select(item => item.Description).Aggregate("", (res, item) => res += item));
         }
 
         public async Task UpdatePassword(string userId, string newPassword)
@@ -148,8 +150,12 @@ namespace ElectronicDepartment.BusinessLogic
             {
                 await _userManager.AddToRoleAsync(teacher, TEACHERROLE);
             }
+            else
+            {
+                throw new Exception(result.Errors.FirstOrDefault().Description?.ToString());
+            }
 
-            return default;
+            return teacher.Id;
         }
 
         public async Task UpdateTeacher(UpdateTeacherViewModel viewModel)

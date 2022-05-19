@@ -5,7 +5,6 @@ using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.Group;
 using ElectronicDepartment.Web.Shared.Group.Responce;
 using Microsoft.EntityFrameworkCore;
-using static ElectronicDepartment.BusinessLogic.Helpers.ApiResponceHelper;
 
 namespace ElectronicDepartment.BusinessLogic
 {

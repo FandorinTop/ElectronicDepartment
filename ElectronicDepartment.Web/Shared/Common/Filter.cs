@@ -6,10 +6,19 @@ using System.Threading.Tasks;
 
 namespace ElectronicDepartment.Web.Shared.Common
 {
-    public class Filter
+    public class FilterRequest
     {
-        public string Field { get; set; } = default!;
+        /// <summary>
+        /// Filter Column name (or null if none set)
+        /// </summary>
+        public string FilterColumn { get; set; }
 
-        public string Value { get; set; } = default!;
+        /// <summary>
+        /// Filter Query string 
+        /// (to be used within the given FilterColumn)
+        /// </summary>
+        public string FilterQuery { get; set; }
+
+        public bool IsPartFilter { get; set; } = true;
     }
 }
