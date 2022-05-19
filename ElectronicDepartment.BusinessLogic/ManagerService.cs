@@ -12,6 +12,59 @@ using static ElectronicDepartment.Common.Constants;
 
 namespace ElectronicDepartment.BusinessLogic
 {
+    public partial class ManagerService : ApplicationUserService, IUserManagerService
+    {
+        public ApplicationDbContext _context;
+        public UserManager<ApplicationUser> _userManager;
+        public IPasswordHasher<ApplicationUser> _passwordHasher;
+        public IPasswordValidator<ApplicationUser> _passwordValidator;
+        public RoleManager<IdentityRole> _roleManager;
+
+        public ManagerService(ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IPasswordHasher<ApplicationUser> passwordHasher,
+            IPasswordValidator<ApplicationUser> passwordValidator)
+        {
+            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _passwordHasher = passwordHasher;
+            _passwordValidator = passwordValidator;
+        }
+
+        public async Task UpdatePassword(string userId, string password, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            DbNullReferenceException.ThrowExceptionIfNull(user, nameof(userId), userId);
+
+            var result = await _userManager.ChangePasswordAsync(user, password, newPassword);
+
+            if (result.Succeeded)
+            {
+                return;
+            }
+
+            throw new Exception(result.Errors.Select(item => item.Description).Aggregate("", (res,  item) => res += item));
+        }
+
+        public async Task UpdatePassword(string userId, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            DbNullReferenceException.ThrowExceptionIfNull(user, nameof(userId), userId);
+
+            var result = await _passwordValidator.ValidateAsync(_userManager, user, newPassword);
+
+            if (result.Succeeded)
+            {
+                user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
+                await _userManager.UpdateAsync(user);
+            }
+
+            throw new Exception(result.Errors.Select(item => item.Description).Aggregate("", (res, item) => res += item));
+        }
+    }
+
     //Student
     public partial class ManagerService
     {
@@ -158,22 +211,6 @@ namespace ElectronicDepartment.BusinessLogic
         {
             MapApplicationUser(manager, viewModel);
             manager.UserType = UserType.Manager;
-        }
-    }
-
-    public partial class ManagerService : ApplicationUserService, IUserManagerService
-    {
-        
-
-        public ApplicationDbContext _context;
-        public UserManager<ApplicationUser> _userManager;
-        public RoleManager<IdentityRole> _roleManager;
-
-        public ManagerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            _context = context;
-            _userManager = userManager;
-            _roleManager = roleManager;
         }
     }
 }

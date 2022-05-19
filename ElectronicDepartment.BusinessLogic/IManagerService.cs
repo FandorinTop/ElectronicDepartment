@@ -6,6 +6,10 @@ namespace ElectronicDepartment.BusinessLogic
 {
     public interface IUserManagerService
     {
+        public Task UpdatePassword(string userId, string password, string newPassword);
+
+        public Task UpdatePassword(string userId, string newPassword);
+
         public Task<string> CreateStudent(CreateStudentViewModel viewModel);
 
         public Task UpdateStudent(UpdateStudentViewModel viewModel);
