@@ -1,6 +1,6 @@
 ﻿namespace ElectronicDepartment.DomainEntities
 {
-    public class Student : ApplizationUser
+    public class Student : ApplicationUser
     {
         public int GroupId { get; set; }
 

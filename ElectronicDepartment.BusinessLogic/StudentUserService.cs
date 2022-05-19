@@ -2,12 +2,13 @@
 using ElectronicDepartment.DataAccess;
 using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.User;
+using ElectronicDepartment.Web.Shared.User.Student;
 using ElectronicDepartment.Web.Shared.User.Student.Responce;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicDepartment.BusinessLogic
 {
-    public class StudentService
+    public class StudentService : ApplicationUserService
     {
         ApplicationDbContext _context;
 
@@ -18,10 +19,24 @@ namespace ElectronicDepartment.BusinessLogic
 
         public async Task<GetStudentViewModel> Get(string id)
         {
-            var user = await _context.Students.FirstOrDefaultAsync(item => item.Id == id);
-            DbNullReferenceException.ThrowExceptionIfNull(user, nameof(user.Id), id);
+            var student = await _context.Students.FirstOrDefaultAsync(item => item.Id == id);
+            DbNullReferenceException.ThrowExceptionIfNull(student, nameof(id), id);
 
-            return ExtractViewModel(user);
+            return ExtractViewModel(student);
+        }
+
+        public async Task Update(UpdateStudentViewModel viewModel)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
+            DbNullReferenceException.ThrowExceptionIfNull(student, nameof(viewModel.Id), viewModel.Id);
+
+            Map(student, viewModel);
+        }
+
+        private void Map(Student student, UpdateStudentViewModel viewModel)
+        {
+            MapApplicationUser(student, viewModel);
+            student.GroupId = viewModel.GroupId;
         }
 
         private GetStudentViewModel ExtractViewModel(Student student) => new GetStudentViewModel()
@@ -37,7 +52,16 @@ namespace ElectronicDepartment.BusinessLogic
             PhoneNumber = student.PhoneNumber
         };
 
-        protected static void MapApplicationUser(ApplizationUser user, BaseUserViewModel viewModel)
+        protected override void MapApplicationUser(in ApplicationUser user, in BaseUserViewModel viewModel)
+        {
+            base.MapApplicationUser(user, viewModel);
+            user.UserType = UserType.Student;
+        }
+    }
+
+    public class ApplicationUserService
+    {
+        protected virtual void MapApplicationUser(in ApplicationUser user, in BaseUserViewModel viewModel)
         {
             user.PhoneNumber = viewModel.PhoneNumber;
             user.Email = viewModel.Email;

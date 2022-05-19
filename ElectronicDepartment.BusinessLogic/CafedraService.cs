@@ -16,13 +16,15 @@ namespace ElectronicDepartment.BusinessLogic
             _context = context;
         }
 
-        public async Task Create(CreateCafedraViewModel viewModel)
+        public async Task<int> Create(CreateCafedraViewModel viewModel)
         {
             var cafedra = new Cafedra();
             Map(cafedra, viewModel);
 
             await _context.AddAsync(cafedra);
             await _context.SaveChangesAsync();
+
+            return cafedra.Id;
         }
 
         public async Task<GetCafedraViewModel> Get(int id)
@@ -48,7 +50,8 @@ namespace ElectronicDepartment.BusinessLogic
             Id = cafedra.Id,
             Name = cafedra.Name,
             Description = cafedra.Description,
-            CreatedAt = cafedra.CreatedAt
+            CreatedAt = cafedra.CreatedAt,
+            Phone = cafedra.Phone
         };
 
         private void Map(Cafedra cafedra, BaseCafedraViewModel viewModel)

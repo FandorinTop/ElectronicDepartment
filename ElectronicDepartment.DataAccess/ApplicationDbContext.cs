@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicDepartment.DataAccess
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplizationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<StudentOnLesson> Marks { get; set; } = default!;
 

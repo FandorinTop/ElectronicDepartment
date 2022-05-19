@@ -2,7 +2,7 @@
 
 namespace ElectronicDepartment.DomainEntities
 {
-    public class Teacher : ApplizationUser
+    public class Teacher : ApplicationUser
     {
         public AcademicAcredition AcademicAcredition { get; set; }
 

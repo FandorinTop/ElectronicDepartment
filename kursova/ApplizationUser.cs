@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ElectronicDepartment.DomainEntities
 {
-    public class ApplizationUser : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [Required]
         [MaxLength(128)]

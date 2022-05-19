@@ -39,17 +39,17 @@ namespace ElectronicDepartment.BusinessLogic
                 .AsQueryable()
                 .Where(student => student.GroupId == group.Id);
 
-            var students = await dataQuery.CreateApiResponceAsync((item) => new GetShortStudentGroupItem()
-            {
-                Id = item.Id,
-                BirthDay = item.BirthDay,
-                FirstName = item.FirstName,
-                LastName = item.LastName,
-                MiddleName = item.MiddleName,
-            });
+            //var students = await dataQuery.CreateApiResponceAsync((item) => new GetShortStudentGroupItem()
+            //{
+            //    Id = item.Id,
+            //    BirthDay = item.BirthDay,
+            //    FirstName = item.FirstName,
+            //    LastName = item.LastName,
+            //    MiddleName = item.MiddleName,
+            //});
 
             var result = ExtractViewModel(group);
-            result.Students = students;
+            //result.Students = students;
 
             return result;
         }

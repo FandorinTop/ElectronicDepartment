@@ -5,7 +5,7 @@ namespace ElectronicDepartment.BusinessLogic
 {
     public interface ICafedraService
     {
-        public Task Create(CreateCafedraViewModel viewModel);
+        public Task<int> Create(CreateCafedraViewModel viewModel);
 
         public Task Update(UpdateCafedraViewModel viewModel);
 

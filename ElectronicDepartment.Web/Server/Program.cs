@@ -1,7 +1,11 @@
+using ElectronicDepartment.BusinessLogic;
 using ElectronicDepartment.DataAccess;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Proxies;
+using Microsoft.Extensions.DependencyInjection;
+using ElectronicDepartment.DomainEntities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Company.WebApplication1
 {
@@ -10,20 +14,34 @@ namespace Company.WebApplication1
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            //builder.Services.AddInjection();
+            builder.Services.AddScoped<ICafedraService, CafedraService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<ICourseTeacherService, CourseTeacherService>();
+            builder.Services.AddScoped<ILessonService, LessonService>();
+            builder.Services.AddScoped<IMarkService, MarkService>();
             // Add services to the container.
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseLazyLoadingProxies()
                 .UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
+
+            builder.Services.AddIdentityCore<ApplicationUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseSwagger();
+                app.UseSwaggerUI();
                 app.UseWebAssemblyDebugging();
             }
             else
@@ -35,17 +53,35 @@ namespace Company.WebApplication1
 
             app.UseHttpsRedirection();
 
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                options.RoutePrefix = string.Empty;
+            });
+
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
-
 
             app.MapRazorPages();
             app.MapControllers();
             app.MapFallbackToFile("index.html");
 
             app.Run();
+        }
+
+        
+    }
+    public static class StartupConfiguration
+    {
+        public static void AddInjection(this IServiceCollection services)
+        {
+            services.AddScoped<ICafedraService, CafedraService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ICourseTeacherService, CourseTeacherService>();
+            services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<IMarkService, MarkService>();
         }
     }
 }
