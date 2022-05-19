@@ -11,22 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicDepartment.BusinessLogic
 {
-    public interface IManagerService
-    {
-        public Task<string> CreateStudent(CreateStudentViewModel viewModel);
-
-        public Task UpdateStudent(UpdateStudentViewModel viewModel);
-
-        public Task<string> CreateTeacher(CreateTeacherViewModel viewModel);
-
-        public Task UpdateTeacher(UpdateTeacherViewModel viewModel);
-
-        public Task<string> CreateManager(CreateManagerViewModel viewModel);
-
-        public Task UpdateManager(UpdateManagerViewModel viewModel);
-    }
-
-    public class ManagerService : ApplicationUserService, IMarkService
+    public class ManagerService : ApplicationUserService, IManagerService
     {
         public ApplicationDbContext _context;
         public UserManager<ApplicationUser> userManager;
@@ -73,5 +58,35 @@ namespace ElectronicDepartment.BusinessLogic
             GroupId = student.GroupId,
             PhoneNumber = student.PhoneNumber
         };
+
+        public Task<string> CreateStudent(CreateStudentViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateStudent(UpdateStudentViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> CreateTeacher(CreateTeacherViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateTeacher(UpdateTeacherViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> CreateManager(CreateManagerViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateManager(UpdateManagerViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
