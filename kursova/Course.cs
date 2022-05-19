@@ -8,6 +8,10 @@ namespace ElectronicDepartment.DomainEntities
         [MaxLength(64)]
         public string Name { get; set; } = default!;
 
+        [Required]
+        [MaxLength(600)]
+        public string Description { get; set; } = default!;
+
         public virtual List<Lesson> GroupCourses { get; set; } = new List<Lesson>();
 
         public virtual List<CourseTeacher> CourseTeachers { get; set; } = new List<CourseTeacher>();
