@@ -21,5 +21,7 @@ namespace ElectronicDepartment.DomainEntities
         public DateTime BirthDay { get; set; }
 
         public Gender Gender { get; set; }
+
+        public UserType UserType { get; set; }
     }
 }

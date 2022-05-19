@@ -1,6 +1,7 @@
 using ElectronicDepartment.DataAccess;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace Company.WebApplication1
 {
@@ -14,8 +15,9 @@ namespace Company.WebApplication1
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
-            builder.Services.AddDbContext<ApplicationDbContext>(options => 
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                options => options.UseLazyLoadingProxies()
+                .UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
 
             var app = builder.Build();
 

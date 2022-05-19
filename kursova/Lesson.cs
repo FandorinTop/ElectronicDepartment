@@ -1,4 +1,5 @@
 ﻿using ElectronicDepartment.Common.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ElectronicDepartment.DomainEntities
 {
@@ -8,8 +9,9 @@ namespace ElectronicDepartment.DomainEntities
 
         public virtual Course Course { get; set; } = default;
 
-        public int CourseTeacherId { get; set; }
+        public int? CourseTeacherId { get; set; }
 
+        [ForeignKey(nameof(CourseTeacherId))]
         public virtual CourseTeacher CourseTeacher { get; set; } = default!;
 
         public virtual List<StudentOnLesson> StudentOnLessons { get; set; } = new List<StudentOnLesson>();
