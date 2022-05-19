@@ -58,18 +58,4 @@ namespace ElectronicDepartment.BusinessLogic
             user.UserType = UserType.Student;
         }
     }
-
-    public class ApplicationUserService
-    {
-        protected virtual void MapApplicationUser(in ApplicationUser user, in BaseUserViewModel viewModel)
-        {
-            user.PhoneNumber = viewModel.PhoneNumber;
-            user.Email = viewModel.Email;
-            user.BirthDay = viewModel.BirthDay;
-            user.Gender = viewModel.Gender;
-            user.FirstName = viewModel.FirstName;
-            user.MiddleName = viewModel.MiddleName;
-            user.LastName = viewModel.LastName;
-        }
-    }
 }

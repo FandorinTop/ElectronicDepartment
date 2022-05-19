@@ -14,12 +14,7 @@ namespace Company.WebApplication1
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            //builder.Services.AddInjection();
-            builder.Services.AddScoped<ICafedraService, CafedraService>();
-            builder.Services.AddScoped<ICourseService, CourseService>();
-            builder.Services.AddScoped<ICourseTeacherService, CourseTeacherService>();
-            builder.Services.AddScoped<ILessonService, LessonService>();
-            builder.Services.AddScoped<IMarkService, MarkService>();
+            builder.Services.AddInjection();
             // Add services to the container.
 
             builder.Services.AddControllersWithViews();
