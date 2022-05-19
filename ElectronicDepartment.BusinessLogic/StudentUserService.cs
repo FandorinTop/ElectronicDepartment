@@ -11,6 +11,11 @@ namespace ElectronicDepartment.BusinessLogic
     {
         ApplicationDbContext _context;
 
+        public StudentService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<GetStudentViewModel> Get(string id)
         {
             var user = await _context.Students.FirstOrDefaultAsync(item => item.Id == id);

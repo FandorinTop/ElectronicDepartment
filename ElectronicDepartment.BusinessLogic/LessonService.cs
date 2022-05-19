@@ -82,7 +82,7 @@ namespace ElectronicDepartment.BusinessLogic
 
         private async Task ValidateCourseTeacher(BaseLessonViewModel viewModel)
         {
-            var courseTeacher = await _context.Teachers.FirstOrDefaultAsync(item => item.Id == viewModel.CourseTeacherId.ToString());
+            var courseTeacher = await _context.CourseTeacher.FirstOrDefaultAsync(item => item.Id == viewModel.CourseTeacherId.ToString());
             DbNullReferenceException.ThrowExceptionIfNull(courseTeacher, nameof(viewModel.CourseTeacherId), viewModel.CourseTeacherId.ToString());
         }
     }
