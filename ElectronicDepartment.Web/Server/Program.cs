@@ -1,4 +1,6 @@
+using ElectronicDepartment.DataAccess;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 
 namespace Company.WebApplication1
 {
@@ -12,6 +14,8 @@ namespace Company.WebApplication1
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+            builder.Services.AddDbContext<ApplicationDbContext>(options => 
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
 
             var app = builder.Build();
 

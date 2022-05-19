@@ -8,9 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ElectronicDepartment.DataAccess\ElectronicDepartment.DataAccess.csproj" />
     <ProjectReference Include="..\Client\ElectronicDepartment.Web.Client.csproj" />
     <ProjectReference Include="..\Shared\ElectronicDepartment.Web.Shared.csproj" />
   </ItemGroup>

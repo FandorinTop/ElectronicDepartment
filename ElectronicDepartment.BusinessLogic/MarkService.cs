@@ -16,7 +16,7 @@ namespace ElectronicDepartment.BusinessLogic
             _context = context;
         }
 
-        public async Task<int> AddMark(CreateMarkViewModel viewModel)
+        public async Task<int> Create(CreateMarkViewModel viewModel)
         {
             await Validate(viewModel);
 
@@ -29,7 +29,7 @@ namespace ElectronicDepartment.BusinessLogic
             return mark.Id;
         }
 
-        public async Task UpdateMark(UpdateMarkViewModel viewModel)
+        public async Task Update(UpdateMarkViewModel viewModel)
         {
             var mark = await _context.Marks.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
             DbNullReferenceException.ThrowExceptionIfNull(mark, nameof(viewModel.Id), viewModel.Id.ToString());
@@ -40,7 +40,7 @@ namespace ElectronicDepartment.BusinessLogic
             await _context.SaveChangesAsync();
         }
 
-        public async Task<GetMarkResponce> GetMark(int id)
+        public async Task<GetMarkResponce> Get(int id)
         {
             var mark = await _context.Marks.FirstOrDefaultAsync(item => item.Id == id);
             DbNullReferenceException.ThrowExceptionIfNull(mark, nameof(id), id.ToString());

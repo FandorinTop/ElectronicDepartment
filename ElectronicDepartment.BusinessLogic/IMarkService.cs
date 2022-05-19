@@ -5,11 +5,11 @@ namespace ElectronicDepartment.BusinessLogic
 {
     public interface IMarkService
     {
-        public Task<int> AddMark(CreateMarkViewModel viewModel);
+        public Task<int> Create(CreateMarkViewModel viewModel);
 
-        public Task UpdateMark(UpdateMarkViewModel viewModel);
+        public Task Update(UpdateMarkViewModel viewModel);
 
-        public Task<GetMarkResponce> GetMark(int id);
+        public Task<GetMarkResponce> Get(int id);
 
         public Task GetAllMark();
     }

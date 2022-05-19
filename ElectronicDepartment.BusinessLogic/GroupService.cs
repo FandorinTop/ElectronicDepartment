@@ -18,7 +18,7 @@ namespace ElectronicDepartment.BusinessLogic
             _context = context;
         }
 
-        public async Task<int> CreateGroup(CreateGroupViewModel viewModel)
+        public async Task<int> Create(CreateGroupViewModel viewModel)
         {
             var group = new Group();
             Map(group, viewModel);
@@ -29,7 +29,7 @@ namespace ElectronicDepartment.BusinessLogic
             return group.Id;
         }
 
-        public async Task<GetGroupViewModel> GetGroup(int id)
+        public async Task<GetGroupViewModel> Get(int id)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(x => x.Id == id);
             DbNullReferenceException.ThrowExceptionIfNull(group, nameof(id), id.ToString());
@@ -54,7 +54,7 @@ namespace ElectronicDepartment.BusinessLogic
             return result;
         }
 
-        public async Task UpdateGroup(UpdateGroupViewModel viewModel)
+        public async Task Update(UpdateGroupViewModel viewModel)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
             DbNullReferenceException.ThrowExceptionIfNull(group, nameof(viewModel.Id), viewModel.Id.ToString());
@@ -82,10 +82,10 @@ namespace ElectronicDepartment.BusinessLogic
 
     public interface IGroupService
     {
-        public Task<GetGroupViewModel> GetGroup(int id);
+        public Task<GetGroupViewModel> Get(int id);
 
-        public Task<int> CreateGroup(CreateGroupViewModel viewModel);
+        public Task<int> Create(CreateGroupViewModel viewModel);
 
-        public Task UpdateGroup(UpdateGroupViewModel viewModel);
+        public Task Update(UpdateGroupViewModel viewModel);
     }
 }

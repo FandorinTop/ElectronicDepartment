@@ -5,10 +5,10 @@ namespace ElectronicDepartment.BusinessLogic
 {
     public interface ILessonService
     {
-        public Task<int> CreateLesson(CreateLessonViewModel viewModel);
+        public Task<int> Create(CreateLessonViewModel viewModel);
 
-        public Task UpdateLesson(UpdateLessonViewModel viewModel);
+        public Task Update(UpdateLessonViewModel viewModel);
 
-        public Task<GetLessonViewModel> GetLesson(int id);
+        public Task<GetLessonViewModel> Get(int id);
     }
 }

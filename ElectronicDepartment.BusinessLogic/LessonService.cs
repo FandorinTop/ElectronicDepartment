@@ -16,7 +16,7 @@ namespace ElectronicDepartment.BusinessLogic
             _context = context;
         }
 
-        public async Task<int> CreateLesson(CreateLessonViewModel viewModel)
+        public async Task<int> Create(CreateLessonViewModel viewModel)
         {
             await Validate(viewModel);
 
@@ -37,7 +37,7 @@ namespace ElectronicDepartment.BusinessLogic
             lesson.TimeSpan = viewModel.TimeSpan;
         }
 
-        public async Task UpdateLesson(UpdateLessonViewModel viewModel)
+        public async Task Update(UpdateLessonViewModel viewModel)
         {
             await Validate(viewModel);
 
@@ -50,15 +50,15 @@ namespace ElectronicDepartment.BusinessLogic
             await _context.SaveChangesAsync();
         }
 
-        public async Task<GetLessonViewModel> GetLesson(int id)
+        public async Task<GetLessonViewModel> Get(int id)
         {
             var lesson = await _context.Lessons.FirstOrDefaultAsync(item => item.Id == id);
             DbNullReferenceException.ThrowExceptionIfNull(lesson, nameof(id), id.ToString());
 
-            return ExtractLessonViewModel(lesson);
+            return ExtractViewModel(lesson);
         }
 
-        private GetLessonViewModel ExtractLessonViewModel(Lesson item) => new GetLessonViewModel()
+        private GetLessonViewModel ExtractViewModel(Lesson item) => new GetLessonViewModel()
         {
             Id = item.Id,
             GroupId = item.GroupId,
@@ -82,7 +82,7 @@ namespace ElectronicDepartment.BusinessLogic
 
         private async Task ValidateCourseTeacher(BaseLessonViewModel viewModel)
         {
-            var courseTeacher = await _context.CourseTeacher.FirstOrDefaultAsync(item => item.Id == viewModel.CourseTeacherId.ToString());
+            var courseTeacher = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == viewModel.CourseTeacherId);
             DbNullReferenceException.ThrowExceptionIfNull(courseTeacher, nameof(viewModel.CourseTeacherId), viewModel.CourseTeacherId.ToString());
         }
     }
