@@ -31,6 +31,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
             return Ok(cafedraViewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetSelector()
+        {
+            var cafedraViewModel = await _cafedraService.GetSelector();
+
+            return Ok(cafedraViewModel);
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(UpdateCafedraViewModel viewModel)
         {

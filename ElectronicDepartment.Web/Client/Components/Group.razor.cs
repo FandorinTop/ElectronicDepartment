@@ -87,8 +87,6 @@ namespace ElectronicDepartment.Web.Client.Components
             {
                 await JS.InvokeAsync<object>("alert", $"UpdateError {await result.Content.ReadAsStringAsync()}");
             }
-
-
         }
     }
 }

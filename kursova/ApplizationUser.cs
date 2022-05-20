@@ -23,5 +23,9 @@ namespace ElectronicDepartment.DomainEntities
         public Gender Gender { get; set; }
 
         public UserType UserType { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public DateTime DeletedAt { get; set; } = DateTime.MinValue;
     }
 }

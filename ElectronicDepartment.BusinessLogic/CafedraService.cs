@@ -35,6 +35,19 @@ namespace ElectronicDepartment.BusinessLogic
             return ExctractViewModel(cafedra);
         }
 
+        public async Task<IEnumerable<GetCafedraSelectorViewModel>> GetSelector()
+        {
+            var responce = await _context.Cafedras
+                .Where(item => item.DeletedAt == DateTime.MinValue)
+                .Select(item => new GetCafedraSelectorViewModel()
+            {
+                Id = item.Id,
+                Name = item.Name
+            }).ToListAsync();
+
+            return responce;
+        }
+
         public async Task Update(UpdateCafedraViewModel viewModel)
         {
             var cafedra = await _context.Cafedras.FirstOrDefaultAsync(item => item.Id == viewModel.Id);

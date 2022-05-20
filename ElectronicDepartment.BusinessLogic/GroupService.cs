@@ -77,14 +77,18 @@ namespace ElectronicDepartment.BusinessLogic
                 CreatedAt = group.CreatedAt,
             };
         }
-    }
 
-    public interface IGroupService
-    {
-        public Task<GetGroupViewModel> Get(int id);
+        public async Task<IEnumerable<GetGroupSelectorViewModel>> GetSelector()
+        {
+            var responce = await _context.Groups
+                            .Where(item => item.DeletedAt == DateTime.MinValue)
+                            .Select(item => new GetGroupSelectorViewModel()
+                            {
+                                Id = item.Id,
+                                Name = item.Name
+                            }).ToListAsync();
 
-        public Task<int> Create(CreateGroupViewModel viewModel);
-
-        public Task Update(UpdateGroupViewModel viewModel);
+            return responce;
+        }
     }
 }

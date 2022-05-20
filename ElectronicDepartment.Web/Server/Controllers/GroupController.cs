@@ -26,9 +26,17 @@ namespace ElectronicDepartment.Web.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(int id)
         {
-            var GroupViewModel = await _groupService.Get(id);
+            var groupViewModel = await _groupService.Get(id);
 
-            return Ok(GroupViewModel);
+            return Ok(groupViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSelector()
+        {
+            var groupViewModel = await _groupService.GetSelector();
+
+            return Ok(groupViewModel);
         }
 
         [HttpPut]

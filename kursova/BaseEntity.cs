@@ -9,6 +9,6 @@ namespace ElectronicDepartment.DomainEntities
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime DeletedAt { get; set; }
+        public DateTime DeletedAt { get; set; } = DateTime.MinValue;
     }
 }

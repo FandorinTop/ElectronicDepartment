@@ -19,7 +19,7 @@ namespace ElectronicDepartment.Web.Shared.User
 
         public DateTime BirthDay { get; set; }
 
-        public Gender Gender { get; set; }
+        public Gender Gender { get; set; } = Gender.None;
 
         [Required]
         [EmailAddress]

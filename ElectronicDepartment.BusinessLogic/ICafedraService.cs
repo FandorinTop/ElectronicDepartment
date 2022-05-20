@@ -10,5 +10,7 @@ namespace ElectronicDepartment.BusinessLogic
         public Task Update(UpdateCafedraViewModel viewModel);
 
         public Task<GetCafedraViewModel> Get(int id);
+
+        public Task<IEnumerable<GetCafedraSelectorViewModel>> GetSelector();
     }
 }
