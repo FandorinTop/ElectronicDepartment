@@ -6,11 +6,11 @@ namespace ElectronicDepartment.Web.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class GroupConteroller : ControllerBase
+    public class GroupController : ControllerBase
     {
         private IGroupService _groupService;
 
-        public GroupConteroller(IGroupService groupService)
+        public GroupController(IGroupService groupService)
         {
             _groupService = groupService;
         }
@@ -36,7 +36,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         {
             await _groupService.Update(viewModel);
 
-            return Ok(true);
+            return Ok();
         }
     }
 }

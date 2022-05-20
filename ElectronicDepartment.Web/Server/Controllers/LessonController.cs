@@ -6,11 +6,11 @@ namespace ElectronicDepartment.Web.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class LessonConteroller : ControllerBase
+    public class LessonController : ControllerBase
     {
         private ILessonService _lessonService;
 
-        public LessonConteroller(ILessonService lessonService)
+        public LessonController(ILessonService lessonService)
         {
             _lessonService = lessonService;
         }

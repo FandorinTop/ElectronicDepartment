@@ -6,11 +6,11 @@ namespace ElectronicDepartment.Web.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class MarkConteroller : ControllerBase
+    public class MarkController : ControllerBase
     {
         private IMarkService _markService;
 
-        public MarkConteroller(IMarkService markService)
+        public MarkController(IMarkService markService)
         {
             _markService = markService;
         }

@@ -8,11 +8,11 @@ namespace ElectronicDepartment.Web.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ManagerConteroller : ControllerBase
+    public class ManagerController : ControllerBase
     {
         private IUserManagerService _managerService;
 
-        public ManagerConteroller(IUserManagerService ManagerService)
+        public ManagerController(IUserManagerService ManagerService)
         {
             _managerService = ManagerService;
         }

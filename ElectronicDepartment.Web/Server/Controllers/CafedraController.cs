@@ -6,11 +6,11 @@ namespace ElectronicDepartment.Web.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class CafedraConteroller : ControllerBase
+    public class CafedraController : ControllerBase
     {
         private ICafedraService _cafedraService;
 
-        public CafedraConteroller(ICafedraService cafedraService)
+        public CafedraController(ICafedraService cafedraService)
         {
             _cafedraService = cafedraService;
         }
