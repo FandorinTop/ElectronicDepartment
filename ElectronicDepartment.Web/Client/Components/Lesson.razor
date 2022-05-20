@@ -1,0 +1,57 @@
+﻿@page "/manage/Lesson/{Id:int?}"
+
+@using System.ComponentModel.DataAnnotations
+@using System.IO
+@using System.Net.Http.Headers
+@using ElectronicDepartment.Common.Enums
+@using ElectronicDepartment.Web.Shared.CourseTeacher.Responce
+
+<EditForm Model="Model" OnValidSubmit="Success">
+    <DataAnnotationsValidator />
+    <div class="mat-layout-grid">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            @Title
+        </div>
+        <MatDivider />
+        <br />
+        <div class="mat-layout-grid-inner">
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                    <p>
+                        <MatDatePicker Label="BirthDay" @bind-Value="Model.LessonStart" FullWidth="true"/>
+                        <ValidationMessage For="@(() => Model.LessonStart)" />
+                    </p>
+                    
+
+                    <p>
+                        <MatSelectValue Label="Genders" Context="item1" @bind-Value="@Model.LessonType" Items="@LessonTypes" ValueSelector="@(item1 => item1)" FullWidth="true">
+                        </MatSelectValue>
+                        <ValidationMessage For="@(() => Model.LessonType)" />
+                    </p>
+                    
+                    <p>
+                        <MatAutocompleteList Context="teacher" Items="@TeacherSelectors" TItem="GetCourseTeacherSelectorViewModel" Label="Select teacher" CustomStringSelector="@(i => i.LastName)" @bind-Value="@SelectedTeacher">
+                            <ItemTemplate>
+                                <div style="display: flex; flex-direction: row; width: 100%;">
+                                    <div style="flex: 1;">@teacher.FirstName</div>
+                                    <div style="flex: 1;">@teacher.MiddleName</div>
+                                    <div style="flex: 1;">@teacher.LastName</div>
+                                    <div style="flex: 1;">@teacher.AcademicAcredition</div>
+                                </div>
+                            </ItemTemplate>
+                        </MatAutocompleteList>
+                        <ValidationMessage For="@(() => Model.CourseTeacherId)" />
+                    </p>
+                </div>
+
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                </div>
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                    <MatButton Type="submit" Raised="true">Send</MatButton>
+                </div>
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>

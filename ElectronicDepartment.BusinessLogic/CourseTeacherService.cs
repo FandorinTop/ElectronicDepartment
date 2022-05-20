@@ -79,5 +79,22 @@ namespace ElectronicDepartment.BusinessLogic
             courseTeacher.CourseId = viewModel.CourseId;
             courseTeacher.TeacherId = viewModel.TeacherId;
         }
+
+        public async Task<IEnumerable<GetCourseTeacherSelectorViewModel>> GetSelector()
+        {
+            var responce = await _context.CourseTeachers
+                            .Where(item => item.DeletedAt == DateTime.MinValue)
+                            .Select(item => new GetCourseTeacherSelectorViewModel
+                            {
+                                Id = item.Id,
+                                FirstName = item.Teacher.FirstName,
+                                LastName = item.Teacher.LastName,
+                                MiddleName = item.Teacher.MiddleName,
+                                AcademicAcredition = item.Teacher.AcademicAcredition,
+                                CourseId = item.CourseId
+                            }).ToListAsync();
+
+            return responce;
+        }
     }
 }

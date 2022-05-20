@@ -11,11 +11,15 @@ namespace ElectronicDepartment.Web.Shared.Lesson.Responce
     {
         public int Id { get; set; }
 
+        public int CourseId { get; set; }
+        
         public int? CourseTeacherId { get; set; }
 
         public LessonType LessonType { get; set; }
 
-        public TimeSpan TimeSpan { get; set; }
+        public DateTime LessonStart { get; set; }
+
+        public int Duration { get; set; }
 
         public DateTime CreatedAt { get; set; }
     }

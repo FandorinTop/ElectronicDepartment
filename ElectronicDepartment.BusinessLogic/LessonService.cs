@@ -31,9 +31,11 @@ namespace ElectronicDepartment.BusinessLogic
 
         private void Map(Lesson lesson, BaseLessonViewModel viewModel)
         {
+            lesson.CourseId = viewModel.CourseId;
             lesson.CourseTeacherId = viewModel.CourseTeacherId;
             lesson.LessonType = viewModel.LessonType;
-            lesson.TimeSpan = viewModel.TimeSpan;
+            lesson.LessonStart = viewModel.LessonStart;
+            lesson.Duration = viewModel.Duration;
         }
 
         public async Task Update(UpdateLessonViewModel viewModel)
@@ -60,14 +62,17 @@ namespace ElectronicDepartment.BusinessLogic
         private GetLessonViewModel ExtractViewModel(Lesson item) => new GetLessonViewModel()
         {
             Id = item.Id,
+            CourseId = item.CourseId,
             CourseTeacherId = item.CourseTeacherId,
             LessonType = item.LessonType,
             CreatedAt = item.CreatedAt,
-            TimeSpan = item.TimeSpan
+            LessonStart = item.LessonStart,
+            Duration = item.Duration
         };
 
         private async Task Validate(BaseLessonViewModel viewModel)
         {
+            await ValidateCourse(viewModel);
             await ValidateCourseTeacher(viewModel);
         }
 
@@ -75,6 +80,12 @@ namespace ElectronicDepartment.BusinessLogic
         {
             var courseTeacher = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == viewModel.CourseTeacherId);
             DbNullReferenceException.ThrowExceptionIfNull(courseTeacher, nameof(viewModel.CourseTeacherId), viewModel.CourseTeacherId.ToString());
+        }
+
+        private async Task ValidateCourse(BaseLessonViewModel viewModel)
+        {
+            var course = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == viewModel.CourseId);
+            DbNullReferenceException.ThrowExceptionIfNull(course, nameof(viewModel.CourseId), viewModel.CourseId.ToString());
         }
     }
 }

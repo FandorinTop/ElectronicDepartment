@@ -58,5 +58,18 @@ namespace ElectronicDepartment.BusinessLogic
             Description = item.Description,
             CreatedAt = item.CreatedAt
         };
+
+        public async Task<IEnumerable<GetCourseSelectorViewModel>> GetSelector()
+        {
+            var responce = await _context.Courses
+                .Where(item => item.DeletedAt == DateTime.MinValue)
+                .Select(item => new GetCourseSelectorViewModel()
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                }).ToListAsync();
+
+            return responce;
+        }
     }
 }

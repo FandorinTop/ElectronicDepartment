@@ -31,6 +31,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
             return Ok(CourseTeacherViewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetSelector()
+        {
+            var selector = await _courseTeacherService.GetSelector();
+
+            return Ok(selector);
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(UpdateCourseTeacherViewModel viewModel)
         {

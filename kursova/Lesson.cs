@@ -18,6 +18,8 @@ namespace ElectronicDepartment.DomainEntities
 
         public LessonType LessonType { get; set; }
 
-        public TimeSpan TimeSpan { get; set; }
+        public DateTime LessonStart { get; set; }
+
+        public int Duration { get; set; }
     }
 }
