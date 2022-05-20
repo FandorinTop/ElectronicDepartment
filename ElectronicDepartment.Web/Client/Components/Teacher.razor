@@ -1,4 +1,4 @@
-﻿@page "/manage/Teacher/{Id}"
+﻿@page "/manage/Teacher/{Id?}"
 
 @using System.ComponentModel.DataAnnotations
 @using System.IO
@@ -53,11 +53,14 @@
                     </p>
 
                     <p>
-                        <MatSelectValue Label="Cafedras" Context="item" @bind-Value="@Model.CafedraId" Items="@CafedraSelectors" ValueSelector="@(item => item.Id)" FullWidth="true">
+                        <MatAutocompleteList Context="cafedra" Items="@CafedraSelectors" TItem="GetCafedraSelectorViewModel" Label="Select Cafedra" CustomStringSelector="@(i => i.Name)" @bind-Value="@SelectedCafedra">
                             <ItemTemplate>
-                                <span>@item.Name</span>
+                                <div style="display: flex; flex-direction: row; width: 100%;">
+                                    <div style="flex: 1;">@cafedra.Name</div>
+                                </div>
                             </ItemTemplate>
-                        </MatSelectValue>
+                        </MatAutocompleteList>
+
                         <ValidationMessage For="@(() => Model.CafedraId)" />
                     </p>
 

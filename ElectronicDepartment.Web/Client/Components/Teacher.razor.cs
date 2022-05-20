@@ -41,9 +41,12 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private GetCafedraSelectorViewModel[] CafedraSelectors { get; set; } = new GetCafedraSelectorViewModel[0];
 
+        private GetCafedraSelectorViewModel SelectedCafedra { get; set; }
+
         public async Task Success()
         {
             Console.WriteLine("Success");
+            Model.CafedraId = SelectedCafedra?.Id ?? Model.CafedraId;
 
             if (string.IsNullOrEmpty(Id))
             {

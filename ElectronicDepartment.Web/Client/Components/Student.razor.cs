@@ -31,9 +31,12 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private GetGroupSelectorViewModel[] GroupSelectors { get; set; } = new GetGroupSelectorViewModel[0];
 
+        private GetGroupSelectorViewModel SelectedGroup { get; set; }
+
         public async Task Success()
         {
             Console.WriteLine("Success");
+            Model.GroupId = SelectedGroup?.Id ?? Model.GroupId;
 
             if (string.IsNullOrEmpty(Id))
             {
@@ -117,6 +120,16 @@ namespace ElectronicDepartment.Web.Client.Components
                 GroupSelectors = result.ToArray();
             }
 
+        }
+
+        private void OnNullGroup(object obj)
+        {
+            var res = obj as GetGroupSelectorViewModel;
+
+            if (res is not null)
+            {
+                Model.GroupId = res.Id;
+            }
         }
     }
 }
