@@ -15,6 +15,7 @@ namespace ElectronicDepartment.Web.Client.Components
         [Inject]
         IJSRuntime JS { get; set; }
 
+
         [Parameter]
         public int? Id { get; set; } = default;
 

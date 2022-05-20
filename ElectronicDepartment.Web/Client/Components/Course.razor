@@ -3,36 +3,75 @@
 @using System.ComponentModel.DataAnnotations
 @using System.IO
 @using System.Net.Http.Headers
+@using ElectronicDepartment.Web.Shared.CourseTeacher.Responce
 
-<EditForm Model="Model" OnSubmit="Success">
+<EditForm Model="Model" OnValidSubmit="Success">
     <DataAnnotationsValidator />
     <div class="mat-layout-grid">
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-            @Title
-        </div>
-        <MatDivider />
-        <br/>
         <div class="mat-layout-grid-inner">
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-                    <p>
-                        <MatTextField Label="@nameof(Model.Name)" @bind-Value="Model.Name" />
-                        <ValidationMessage For="@(() => Model.Name)" />
-                    </p>
-                    <p>
-                        <MatTextField TextArea=true Label="@nameof(Model.Description)" @bind-Value="Model.Description" />
-                        <ValidationMessage For="@(() => Model.Description)" />
-                    </p>
-                </div>
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5" style="text-align: center;">
+                Header 1
+            </div>
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-7" style="text-align: center;">
+                @TableHeader
+            </div>
 
-                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-                </div>
-                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
+                <p>
+                    <MatTextField Label="@nameof(Model.Name)" @bind-Value="Model.Name" FullWidth="true" />
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </p>
+                <p>
+                    <MatTextField TextArea=true Label="@nameof(Model.Description)" @bind-Value="Model.Description" FullWidth="true" />
+                    <ValidationMessage For="@(() => Model.Description)" />
+                </p>
+                <MatAutocompleteList Context="teacher"
+                                     @ref="MatAutocompleteList"
+                                     Items="@FreeTeacherContainer"
+                                     TItem="GetCourseTeacherSelectorViewModel"
+                                     Label="@MatSelectorLabel"
+                                     FullWidth="true"
+                                     CustomStringSelector="item => item.LastName"
+                                     ValueChanged="AddTeacherToCourse"
+                                     ShowClearButton="@(FreeTeacherContainer.Any())"
+                                     disabled="@(!FreeTeacherContainer.Any())">
+                    <ItemTemplate>
+                        <div style="display: flex; flex-direction: row; width: 100%;">
+                            <div style="flex: 1; text-align: left;">@teacher.FirstName</div>
+                            <div style="flex: 1; text-align: left;">@teacher.MiddleName</div>
+                            <div style="flex: 1; text-align: left;">@teacher.LastName</div>
+                            <div style="flex: 1; text-align: left;">@teacher.AcademicAcredition</div>
+                        </div>
+                    </ItemTemplate>
+                </MatAutocompleteList>
+
+                <div style="padding-top: 15px;">
                     <MatButton Type="submit" Raised="true">Send</MatButton>
                 </div>
-                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-                </div>
+
+            </div>  
+
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-7" style="text-align: center;">
+                <MatTable Context="teacher"
+                          Items="CourseTeacherContainer"
+                          OnRowDbClick="RemoveTeacherFromCourse"
+                          AllowSelection="true">
+                    <MatTableHeader>
+                        <th>FirstName</th>
+                        <th>MiddleName</th>
+                        <th>LastName</th>
+                        <th>AcademicAcredition</th>
+                    </MatTableHeader>
+                    <MatTableRow>
+                        <td>@teacher.FirstName</td>
+                        <td>@teacher.MiddleName</td>
+                        <td>@teacher.LastName</td>
+                        <td>@teacher.AcademicAcredition</td>
+                    </MatTableRow>
+                </MatTable>
             </div>
+
+
         </div>
     </div>
 </EditForm>

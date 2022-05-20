@@ -9,9 +9,9 @@ namespace ElectronicDepartment.Web.Shared.CourseTeacher.Responce
 {
     public class GetCourseTeacherSelectorViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public int CourseId { get; set; }
+        public IEnumerable<int> CourseIds { get; set; } = new int[0];
 
         public string FirstName { get; set; }
 
@@ -21,5 +21,9 @@ namespace ElectronicDepartment.Web.Shared.CourseTeacher.Responce
 
         public AcademicAcredition AcademicAcredition { get; set; }
 
+        public GetCourseTeacherSelectorViewModel[] Where()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

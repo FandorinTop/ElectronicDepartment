@@ -16,17 +16,46 @@ namespace ElectronicDepartment.BusinessLogic
             _context = context;
         }
 
+        public async Task<IEnumerable<int>> CreateRange(IEnumerable<CreateCourseTeacherViewModel> viewModel)
+        {
+            var responce = new List<int>();
+
+            foreach (var item in viewModel)
+            {
+                var entity = await GetOrCreateDbEntity(item);
+                responce.Add(entity.Id);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return responce;
+        }
+
         public async Task<int> Create(CreateCourseTeacherViewModel viewModel)
+        {
+            var entity = GetOrCreateDbEntity(viewModel);
+            await _context.SaveChangesAsync();
+
+            return entity.Id;
+        }
+
+        private async Task<CourseTeacher> GetOrCreateDbEntity(CreateCourseTeacherViewModel viewModel)
         {
             await Validate(viewModel);
 
-            var courseTeacher = new CourseTeacher();
-            Map(courseTeacher, viewModel);
+            var courseTeacher = await _context.CourseTeachers
+                .FirstOrDefaultAsync(item => item.CourseId == viewModel.CourseId
+                && item.TeacherId == viewModel.TeacherId);
 
-            await _context.AddAsync(courseTeacher);
-            await _context.SaveChangesAsync();
+            if (courseTeacher is null)
+            {
+                courseTeacher = new CourseTeacher();
+                Map(courseTeacher, viewModel);
 
-            return courseTeacher.Id;
+                await _context.AddAsync(courseTeacher);
+            }
+
+            return courseTeacher;
         }
 
         private async Task Validate(BaseCourseTeacherViewModel viewModel)
@@ -52,10 +81,18 @@ namespace ElectronicDepartment.BusinessLogic
             var courseTeacher = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
             DbNullReferenceException.ThrowExceptionIfNull(courseTeacher, nameof(viewModel.Id), viewModel.Id.ToString());
             await Validate(viewModel);
-            
-            Map(courseTeacher, viewModel);
 
-            await _context.SaveChangesAsync();
+            var anotherTeacher = await _context.CourseTeachers
+                .FirstOrDefaultAsync(item => item.CourseId == viewModel.CourseId
+                && item.TeacherId == viewModel.TeacherId);
+
+            if(anotherTeacher is null)
+            {
+                Map(courseTeacher, viewModel);
+                await _context.SaveChangesAsync();
+            }
+
+            throw new Exception($"Teacher already in this course");
         }
 
         public async Task<GetCourseTeacherViewModel> Get(int id)
@@ -82,19 +119,45 @@ namespace ElectronicDepartment.BusinessLogic
 
         public async Task<IEnumerable<GetCourseTeacherSelectorViewModel>> GetSelector()
         {
-            var responce = await _context.CourseTeachers
+            var responce = await _context.Teachers
                             .Where(item => item.DeletedAt == DateTime.MinValue)
                             .Select(item => new GetCourseTeacherSelectorViewModel
                             {
                                 Id = item.Id,
-                                FirstName = item.Teacher.FirstName,
-                                LastName = item.Teacher.LastName,
-                                MiddleName = item.Teacher.MiddleName,
-                                AcademicAcredition = item.Teacher.AcademicAcredition,
-                                CourseId = item.CourseId
+                                FirstName = item.FirstName,
+                                LastName = item.LastName,
+                                MiddleName = item.MiddleName,
+                                AcademicAcredition = item.AcademicAcredition,
+                                CourseIds = item.Courses.Select(item => item.CourseId)
                             }).ToListAsync();
 
             return responce;
+        }
+
+        public async Task Remove(int id)
+        {
+            await Delete(id);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveRange(IEnumerable<int> ids)
+        {
+            foreach (var id in ids)
+            {
+                await Delete(id);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task Delete(int id)
+        {
+            var course = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == id);
+
+            if (course is not null)
+            {
+                _context.CourseTeachers.Remove(course);
+            }
         }
     }
 }

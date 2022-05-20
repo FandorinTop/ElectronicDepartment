@@ -43,8 +43,8 @@ namespace ElectronicDepartment.Web.Client.Components
         public async Task Success()
         {
             Console.WriteLine("Success");
-            Model.CourseTeacherId = SelectedTeacher?.Id ?? Model.CourseTeacherId;
-            Model.CourseId = SelectedTeacher?.Id ?? Model.CourseId;
+            //Model.CourseTeacherId = SelectedTeacher?.Id ?? Model.CourseTeacherId;
+            //Model.CourseId = SelectedTeacher?.Id ?? Model.CourseId;
 
             if (Id == null)
             {

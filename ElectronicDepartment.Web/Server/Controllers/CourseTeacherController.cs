@@ -23,6 +23,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
             return Ok(id.ToString());
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create(IEnumerable<CreateCourseTeacherViewModel> viewModel)
+        {
+            var ids = await _courseTeacherService.CreateRange(viewModel);
+
+            return Ok(ids);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get(int id)
         {
@@ -45,6 +53,20 @@ namespace ElectronicDepartment.Web.Server.Controllers
             await _courseTeacherService.Update(viewModel);
 
             return Ok(true);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteRange(IEnumerable<int> ids)
+        {
+            await _courseTeacherService.RemoveRange(ids);
+
+            return Ok();
         }
     }
 }

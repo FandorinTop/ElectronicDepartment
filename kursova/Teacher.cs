@@ -9,5 +9,7 @@ namespace ElectronicDepartment.DomainEntities
         public int CafedraId { get; set; }
 
         public virtual Cafedra Cafedra { get; set; }
+
+        public virtual List<CourseTeacher> Courses { get; set; }
     }
 }
