@@ -1,7 +1,10 @@
 ﻿using ElectronicDepartment.Common.Enums;
 using ElectronicDepartment.Web.Shared.Course.Responce;
 using ElectronicDepartment.Web.Shared.CourseTeacher.Responce;
+using ElectronicDepartment.Web.Shared.Group.Responce;
 using ElectronicDepartment.Web.Shared.Lesson;
+using ElectronicDepartment.Web.Shared.Mark;
+using ElectronicDepartment.Web.Shared.Mark.Responce;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Net.Http.Json;
@@ -10,6 +13,13 @@ namespace ElectronicDepartment.Web.Client.Components
 {
     public partial class Lesson
     {
+        private List<GetStudentSelectViewModel> FreeStudentSelectors { get; set; } = new List<GetStudentSelectViewModel>();
+        private List<GetStudentOnTheLessonViewModel> StudentInLessons { get; set; } = new List<GetStudentOnTheLessonViewModel>();
+
+        private UpdateLessonViewModel Model { get; set; } = new UpdateLessonViewModel();
+
+        private UpdateMarkViewModel StudentOnLesson { get; set; } = new UpdateMarkViewModel();
+
         private string Title { get; set; } = string.Empty;
 
         [Inject]
@@ -30,36 +40,16 @@ namespace ElectronicDepartment.Web.Client.Components
             LessonType.Exam,
         };
 
-        private BaseLessonViewModel Model { get; set; } = new BaseLessonViewModel();
-
-        private GetCourseTeacherSelectorViewModel[] TeacherSelectors { get; set; } = new GetCourseTeacherSelectorViewModel[0];
-
-        private GetCourseTeacherSelectorViewModel SelectedTeacher { get; set; }
-
-        private GetCourseSelectorViewModel[] CourseSelectors { get; set; } = new GetCourseSelectorViewModel[0];
-
-        private GetCourseSelectorViewModel SelectedCourse { get; set; }
-
         public async Task Success()
         {
             Console.WriteLine("Success");
-            //Model.CourseTeacherId = SelectedTeacher?.Id ?? Model.CourseTeacherId;
-            //Model.CourseId = SelectedTeacher?.Id ?? Model.CourseId;
 
-            if (Id == null)
-            {
-                await CreateAsync();
-            }
-            else
-            {
-                await UpdateAsync();
-            }
+            await UpdateAsync();
         }
 
         protected override async Task OnInitializedAsync()
         {
             await GetAsync();
-            await GetCourseTeacherSelector();
 
             Title = Id == null ? "Create " + nameof(Student) : "Edit " + nameof(Student) + $" with id: '{Id}'";
         }
@@ -68,28 +58,102 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (Id == null)
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseLessonViewModel>($"api/Lesson/Get?id={Id}");
-
+                var result = await HttpClient.GetFromJsonAsync<UpdateLessonViewModel>($"api/Lesson/Get?id={Id}");
+                await GetStudentAsync();
                 Console.WriteLine("getResult: " + result);
 
                 Model = result ?? Model;
             }
         }
 
-        private async Task CreateAsync()
+        private async Task GetStudentAsync()
         {
-            var result = await HttpClient.PostAsync(@"api/Manager/CreateStudent", JsonContent.Create(Model));
+            var studentValue = await HttpClient.GetFromJsonAsync<List<GetStudentSelectViewModel>>($"api/Mark/GetStudentLesson");
+
+            if(studentValue != null)
+            {
+                FreeStudentSelectors.AddRange(studentValue.Where(item => item.LessonIds.Contains(Id.Value)));
+            }
+        }
+
+        private async Task GetStudentOnLesson()
+        {
+            var studentValue = await HttpClient.GetFromJsonAsync<List<GetStudentOnTheLessonViewModel>>($"api/mark/GetStudentOnLesson?id={Id}");
+
+            StudentInLessons = studentValue ?? new List<GetStudentOnTheLessonViewModel>();
+        }
+
+        #region Requests
+        private async void AddStudentOnLessonAsync(UpdateMarkViewModel addViewModel)
+        {
+            var result = await HttpClient.PostAsJsonAsync(@"api/lesson/create", addViewModel);
 
             if (result.IsSuccessStatusCode)
             {
-                var id = await result.Content.ReadAsStringAsync();
-                Id = Convert.ToInt32(id);
-                await JS.InvokeAsync<object>("alert", $"Successful created! with id: '{id}'");
+                var lessonId = Convert.ToInt32(await result.Content.ReadAsStringAsync());
+
+                var student = FreeStudentSelectors.FirstOrDefault(item => item.Id == addViewModel.StudentId);
+
+                if(student is not null)
+                {
+                    var studentOnLessonItem = new GetStudentOnTheLessonViewModel();
+                    Map(studentOnLessonItem, student);
+
+                    studentOnLessonItem.Id = lessonId;
+                    studentOnLessonItem.Mark = addViewModel.Value;
+
+                    StudentInLessons.Add(studentOnLessonItem);
+                    FreeStudentSelectors.Remove(student);
+
+                    await JS.InvokeAsync<object>("alert", $"Successful added student on lesson");
+                }
             }
             else
             {
-                await JS.InvokeAsync<object>("alert", $"CreationError {await result.Content.ReadAsStringAsync()}");
+                await JS.InvokeAsync<object>("alert", $"UpdateError {await result.Content.ReadAsStringAsync()}");
             }
+        }
+
+        private async void RemoveFromLessonAsync(GetStudentOnTheLessonViewModel removeViewModel)
+        {
+            var result = await HttpClient.DeleteAsync(@$"api/mark/delete?id={removeViewModel.Id}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                var studentInLesson = StudentInLessons.FirstOrDefault(item => item.StudentId == removeViewModel.StudentId);
+
+                if (studentInLesson is not null)
+                {
+                    var freeStudent = new GetStudentSelectViewModel();
+                    Map(freeStudent, studentInLesson);
+
+                    StudentInLessons.Remove(studentInLesson);
+                    FreeStudentSelectors.Remove(freeStudent);
+
+                    await JS.InvokeAsync<object>("alert", $"Successful removed student from lesson");
+                }
+            }
+            else
+            {
+                await JS.InvokeAsync<object>("alert", $"UpdateError {await result.Content.ReadAsStringAsync()}");
+            }
+        }
+        #endregion
+
+        private void Map(GetStudentOnTheLessonViewModel lesson, GetStudentSelectViewModel freeStudent)
+        {
+            lesson.StudentFullName = freeStudent.FullName;
+            lesson.StudentGroupName = freeStudent.GroupName;
+            lesson.StudentGroupId = freeStudent.GroupId;
+            lesson.StudentId = freeStudent.Id;
+        }
+
+        private void Map(GetStudentSelectViewModel student, GetStudentOnTheLessonViewModel lesson)
+        {
+            student.FullName = lesson.StudentFullName;
+            student.GroupName =  lesson.StudentGroupName;
+            student.GroupId = lesson.StudentGroupId;
+            student.Id = lesson.StudentId;
         }
 
         private async Task UpdateAsync()
@@ -100,7 +164,8 @@ namespace ElectronicDepartment.Web.Client.Components
                 Duration = Model.Duration,
                 LessonStart = Model.LessonStart,
                 LessonType = Model.LessonType,
-                TeacherId = Model.TeacherId
+                TeacherId = Model.TeacherId,
+                CourseId = Model.CourseId
             };
 
             var result = await HttpClient.PutAsync(@"api/Manager/UpdateStudent", JsonContent.Create(updateModel));
@@ -112,26 +177,6 @@ namespace ElectronicDepartment.Web.Client.Components
             else
             {
                 await JS.InvokeAsync<object>("alert", $"UpdateError {await result.Content.ReadAsStringAsync()}");
-            }
-        }
-
-        private async Task GetCourseTeacherSelector()
-        {
-            var result = await HttpClient.GetFromJsonAsync<IEnumerable<GetCourseTeacherSelectorViewModel>>($"api/CourseTeacher/GetSelector");
-
-            if (result.Any())
-            {
-                TeacherSelectors = result.ToArray();
-            }
-        }
-
-        private async Task GetCourseSelector()
-        {
-            var result = await HttpClient.GetFromJsonAsync<IEnumerable<GetCourseSelectorViewModel>>($"api/CourseTeacher/GetSelector");
-
-            if (result.Any())
-            {
-                CourseSelectors = result.ToArray();
             }
         }
     }

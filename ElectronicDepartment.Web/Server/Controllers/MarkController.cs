@@ -8,9 +8,9 @@ namespace ElectronicDepartment.Web.Server.Controllers
     [ApiController]
     public class MarkController : ControllerBase
     {
-        private IMarkService _markService;
+        private IStudentOnLessonService _markService;
 
-        public MarkController(IMarkService markService)
+        public MarkController(IStudentOnLessonService markService)
         {
             _markService = markService;
         }
@@ -38,5 +38,22 @@ namespace ElectronicDepartment.Web.Server.Controllers
 
             return Ok(true);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudentLesson()
+        {
+            var responce = await _markService.GetStudentSelector();
+
+            return Ok(responce);
+        }
+
+        public async Task<IActionResult> GetStudentOnLesson(int id)
+        {
+            var responce = await _markService.GetStudentsWithMarkViewModel(id);
+
+            return Ok(responce);
+        }
+
+        
     }
 }

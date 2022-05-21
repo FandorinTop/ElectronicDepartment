@@ -33,11 +33,19 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetStudentSelector()
+        {
+            var selector = await _groupService.GetStudentSelector();
+
+            return Ok(selector);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetSelector()
         {
-            var groupViewModel = await _groupService.GetSelector();
+            var selector = await _groupService.GetSelector();
 
-            return Ok(groupViewModel);
+            return Ok(selector);
         }
 
         [HttpPut]

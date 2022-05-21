@@ -3,7 +3,7 @@ using ElectronicDepartment.Web.Shared.Mark.Responce;
 
 namespace ElectronicDepartment.BusinessLogic
 {
-    public interface IMarkService
+    public interface IStudentOnLessonService
     {
         public Task<int> Create(CreateMarkViewModel viewModel);
 
@@ -12,5 +12,9 @@ namespace ElectronicDepartment.BusinessLogic
         public Task<GetMarkResponce> Get(int id);
 
         public Task GetAllMark();
+
+        public Task<IEnumerable<GetStudentSelectViewModel>> GetStudentSelector();
+
+        public Task<IEnumerable<GetStudentOnTheLessonViewModel>> GetStudentsWithMarkViewModel(int id);
     }
 }

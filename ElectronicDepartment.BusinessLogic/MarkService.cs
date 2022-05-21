@@ -8,11 +8,11 @@ using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.BusinessLogic
 {
-    public class MarkService : IMarkService
+    public class StudentOnLessonService : IStudentOnLessonService
     {
         ApplicationDbContext _context;
 
-        public MarkService(ApplicationDbContext context)
+        public StudentOnLessonService(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -34,7 +34,7 @@ namespace ElectronicDepartment.BusinessLogic
         {
             var mark = await _context.Marks.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
             DbNullReferenceException.ThrowExceptionIfNull(mark, nameof(viewModel.Id), viewModel.Id.ToString());
-            
+
             await Validate(viewModel);
             Map(mark, viewModel);
 
@@ -52,6 +52,64 @@ namespace ElectronicDepartment.BusinessLogic
         public Task GetAllMark()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<GetStudentOnTheLessonViewModel>> GetStudentsWithMarkViewModel(int id)
+        {
+            var data = await _context.Marks
+                .Where(item => item.DeletedAt == DateTime.MinValue)
+                .Where(item => item.Id == id)
+                .Select(item => new
+                {
+                    item.Id,
+                    item.StudentId,
+                    item.Student.FirstName,
+                    item.Student.MiddleName,
+                    item.Student.LastName,
+                    item.Student.GroupId,
+                    item.Student.Group.Name,
+                    item.Mark
+                }).ToArrayAsync();
+
+            var responce = data.Select(item => new GetStudentOnTheLessonViewModel()
+            {
+                Id = item.Id,
+                StudentGroupId = item.GroupId,
+                StudentId = item.StudentId,
+                StudentGroupName = item.Name,
+                Mark = item.Mark,
+                StudentFullName = $"{item.FirstName} {item.MiddleName} {item.LastName}"
+            });
+
+            return responce;
+        }
+
+        public async Task<IEnumerable<GetStudentSelectViewModel>> GetStudentSelector()
+        {
+            var data = await _context.Students
+                .Where(item => item.DeletedAt == DateTime.MinValue)
+                .Select(item => new
+                {
+                    item.Id,
+                    item.Email,
+                    item.FirstName,
+                    item.MiddleName,
+                    item.LastName,
+                    item.GroupId,
+                    item.Group.Name,
+                    LessonIds = item.StudentOnLessons.Select(item => item.LessonId)
+                }).ToListAsync();
+
+            var responce = data.Select(item => new GetStudentSelectViewModel()
+            {
+                Id = item.Id,
+                GroupId = item.GroupId,
+                GroupName = item.Name,
+                LessonIds = item.LessonIds.ToList(),
+                FullName = $"{item.FirstName} {item.MiddleName} {item.LastName}"
+            });
+
+            return responce;
         }
 
         private GetMarkResponce ExtractMarkResponce(StudentOnLesson item) => new GetMarkResponce()

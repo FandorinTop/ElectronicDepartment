@@ -90,7 +90,7 @@ namespace Company.WebApplication1
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ICourseTeacherService, CourseTeacherService>();
             services.AddScoped<ILessonService, LessonService>();
-            services.AddScoped<IMarkService, MarkService>();
+            services.AddScoped<IStudentOnLessonService, StudentOnLessonService>();
             services.AddScoped<IGroupService, GroupService>();
         }
 

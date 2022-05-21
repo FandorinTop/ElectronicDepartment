@@ -18,4 +18,5 @@ namespace ElectronicDepartment.Web.Shared.Mark.Responce
 
         public DateTime CreatedAt { get; set; }
     }
+
 }
