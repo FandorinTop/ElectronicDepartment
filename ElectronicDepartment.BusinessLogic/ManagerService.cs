@@ -133,6 +133,24 @@ namespace ElectronicDepartment.BusinessLogic
     //Student
     public partial class ManagerService
     {
+        public async Task<BaseStudentViewModel> GetStudent(string id)
+        {
+            var item = await _context.Students.FirstOrDefaultAsync(item => item.Id == id);
+            DbNullReferenceException.ThrowExceptionIfNull(item, nameof(id), id.ToString());
+
+            return new BaseStudentViewModel()
+            {
+                GroupId = item.GroupId,
+                BirthDay = item.BirthDay,
+                Email = item.Email,
+                FirstName = item.FirstName,
+                Gender = item.Gender,
+                LastName = item.LastName,
+                MiddleName = item.MiddleName,
+                PhoneNumber = item.PhoneNumber
+            };
+        }
+
         public async Task<string> CreateStudent(CreateStudentViewModel viewModel)
         {
             var student = new Student();
@@ -221,6 +239,25 @@ namespace ElectronicDepartment.BusinessLogic
             return teacher.Id;
         }
 
+        public async Task<BaseTeacherViewModel> GetTeacher(string id)
+        {
+            var item = await _context.Teachers.FirstOrDefaultAsync(item => item.Id == id);
+            DbNullReferenceException.ThrowExceptionIfNull(item, nameof(id), id.ToString());
+
+            return new BaseTeacherViewModel()
+            {
+                AcademicAcredition = item.AcademicAcredition,
+                CafedraId = item.CafedraId,
+                BirthDay = item.BirthDay,
+                Email = item.Email,
+                FirstName = item.FirstName,
+                Gender = item.Gender,
+                LastName = item.LastName,
+                MiddleName = item.MiddleName,
+                PhoneNumber = item.PhoneNumber
+            };
+        }
+
         public async Task UpdateTeacher(UpdateTeacherViewModel viewModel)
         {
             var teacher = await _context.Teachers.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
@@ -274,6 +311,23 @@ namespace ElectronicDepartment.BusinessLogic
             Map(manager, viewModel);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<BaseManagerViewModel> GetManager(string id)
+        {
+            var item = await _context.Managers.FirstOrDefaultAsync(item => item.Id == id);
+            DbNullReferenceException.ThrowExceptionIfNull(item, nameof(id), id.ToString());
+
+            return new BaseManagerViewModel()
+            {
+                BirthDay = item.BirthDay,
+                Email = item.Email,
+                FirstName = item.FirstName,
+                Gender = item.Gender,
+                LastName = item.LastName,
+                MiddleName = item.MiddleName,
+                PhoneNumber = item.PhoneNumber
+            };
         }
 
         private void Map(Manager manager, BaseManagerViewModel viewModel)

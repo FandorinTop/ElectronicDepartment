@@ -61,7 +61,7 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (!string.IsNullOrEmpty(Id))
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseStudentViewModel>($"api/Student/Get?id={Id}");
+                var result = await HttpClient.GetFromJsonAsync<BaseStudentViewModel>($"api/Manager/GetStudent?id={Id}");
 
                 Console.WriteLine("getResult: " + result);
 

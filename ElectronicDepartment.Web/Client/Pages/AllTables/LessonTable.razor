@@ -1,0 +1,99 @@
+﻿@page "/Lessons"
+@using ElectronicDepartment.Web.Shared
+@using ElectronicDepartment.Web.Shared.Common
+@using ElectronicDepartment.Web.Shared.Lesson.Responce
+@using static ElectronicDepartment.Web.Shared.CafedraController
+@inject NavigationManager NavManager
+
+<h3>LessonTable</h3>
+
+<MatTable Items="ApiResult.Data"
+          class="mat-elevation-z5"
+          UseSortHeaderRow="true"
+          ShowPaging="true"
+          FilterByColumnName="Name">
+    <MatTableHeader>
+        <MatSortHeaderRow SortChanged="@SortData">
+            <MatSortHeader SortId="no">Action</MatSortHeader>
+            <MatSortHeader SortId="Name">CourseName</MatSortHeader>
+            <MatSortHeader SortId="CourseTeacher">CourseTeacher</MatSortHeader>
+            <MatSortHeader SortId="LessonStart">LessonStart</MatSortHeader>
+            <MatSortHeader SortId="LessonType">LessonType</MatSortHeader>
+            <MatSortHeader SortId="Duration">Duration</MatSortHeader>
+            <MatSortHeader SortId="CreatedAt">CreatedAt</MatSortHeader>
+        </MatSortHeaderRow>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>
+            <MatButton Raised="true" Icon="edit" title="Edit" OnClick="@(item => NavManager.NavigateTo($"/manage/Lesson/{@context.Id}"))"></MatButton>
+        </td>
+        <td>@context.CourseName</td>
+        <td>@context.CourseTeacher</td>
+        <td>@context.LessonStart</td>
+        <td>@context.LessonType</td>
+        <td>@context.Duration</td>
+        <td>@context.CreatedAt</td>
+    </MatTableRow>
+</MatTable>
+
+@code {
+    MatPaginator matTablePagenator { get; set; } = null;
+
+    [Inject]
+    HttpClient HttpClient { get; set; }
+
+
+    public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
+        {
+            PageIndex = 0,
+            PageSize = 1000,
+        };
+
+    public ApiResultViewModel<GetLessonViewModel> ApiResult { get; set; } = new ApiResultViewModel<GetLessonViewModel>();
+
+    public async Task GetData()
+    {
+        var result = await HttpClient.PostAsJsonAsync("api/Lesson/GetApiResponce", Pagenator);
+
+        if (result.IsSuccessStatusCode)
+        {
+            ApiResult = await result.Content.ReadFromJsonAsync<ApiResultViewModel<GetLessonViewModel>>();
+        }
+    }
+
+    public async Task SortData(MatSortChangedEvent sort)
+    {
+        if (!(sort == null || sort.Direction == MatSortDirection.None || string.IsNullOrEmpty(sort.SortId)))
+        {
+            if (sort.Direction == MatSortDirection.Desc)
+            {
+                Pagenator.SortingRequests = new List<SortingRequest>()
+                    {
+                        new SortingRequest()
+                        {
+                            SortColumn = sort.SortId,
+                            SortOrder = "DESC"
+                        }
+                    };
+            }
+            else
+            {
+                Pagenator.SortingRequests = new List<SortingRequest>()
+                    {
+                        new SortingRequest()
+                        {
+                            SortColumn = sort.SortId,
+                            SortOrder = "ASC"
+                        }
+                    };
+            }
+
+            await GetData();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+}

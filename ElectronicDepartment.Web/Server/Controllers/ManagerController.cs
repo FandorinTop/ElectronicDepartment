@@ -18,6 +18,30 @@ namespace ElectronicDepartment.Web.Server.Controllers
             _managerService = ManagerService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetManager(string id)
+        {
+            var res = await _managerService.GetManager(id);
+
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTeacher(string id)
+        {
+            var res = await _managerService.GetTeacher(id);
+
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudent(string id)
+        {
+            var res = await _managerService.GetStudent(id);
+
+            return Ok(res);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateStudent(CreateStudentViewModel viewModel)
         {

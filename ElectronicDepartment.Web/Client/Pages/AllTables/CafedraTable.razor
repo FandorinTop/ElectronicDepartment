@@ -1,0 +1,96 @@
+﻿@page "/Cafedras"
+
+@using ElectronicDepartment.Web.Shared
+@using ElectronicDepartment.Web.Shared.Cafedra.Responce
+@using ElectronicDepartment.Web.Shared.Common
+@using static ElectronicDepartment.Web.Shared.CafedraController
+@inject NavigationManager NavigationManager
+
+<h3>CafedraTable</h3>
+
+<MatButton OnClick="">Create new </MatButton>
+
+<MatTable Items="ApiResult.Data"
+          class="mat-elevation-z5"
+          UseSortHeaderRow="true"
+          ShowPaging="true"
+          FilterByColumnName="Name">
+    <MatTableHeader>
+        <MatSortHeaderRow SortChanged="@SortData">
+            <MatSortHeader SortId="no">Action</MatSortHeader>
+            <MatSortHeader SortId="Name">Name</MatSortHeader>
+            <MatSortHeader SortId="Phone">Phone</MatSortHeader>
+            <MatSortHeader SortId="Description">Description</MatSortHeader>
+        </MatSortHeaderRow>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>
+            <MatButton Raised="true" Icon="edit" title="Edit" OnClick="@(item => NavigationManager.NavigateTo($"/manage/Cafedra/{@context.Id}"))"></MatButton>
+        </td>
+        <td>@context.Name</td>
+        <td>@context.Phone</td>
+        <td>@context.Description</td>
+    </MatTableRow>
+</MatTable>
+
+@code {
+    MatPaginator matTablePagenator { get; set; } = null;
+
+    [Inject]
+    HttpClient HttpClient { get; set; }
+
+
+    public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
+        {
+            PageIndex = 0,
+            PageSize = 1000,
+        };
+
+    public ApiResultViewModel<GetCafedraViewModel> ApiResult { get; set; } = new ApiResultViewModel<GetCafedraViewModel>();
+
+    public async Task GetData()
+    {
+        var result = await HttpClient.PostAsJsonAsync("api/Cafedra/GetApiResponce", Pagenator);
+
+        if (result.IsSuccessStatusCode)
+        {
+            ApiResult = await result.Content.ReadFromJsonAsync<ApiResultViewModel<GetCafedraViewModel>>();
+        }
+    }
+
+    public async Task SortData(MatSortChangedEvent sort)
+    {
+        if (!(sort == null || sort.Direction == MatSortDirection.None || string.IsNullOrEmpty(sort.SortId)))
+        {
+            if (sort.Direction == MatSortDirection.Desc)
+            {
+                Pagenator.SortingRequests = new List<SortingRequest>()
+                    {
+                        new SortingRequest()
+                        {
+                            SortColumn = sort.SortId,
+                            SortOrder = "DESC"
+                        }
+                    };
+            }
+            else
+            {
+                Pagenator.SortingRequests = new List<SortingRequest>()
+                    {
+                        new SortingRequest()
+                        {
+                            SortColumn = sort.SortId,
+                            SortOrder = "ASC"
+                        }
+                    };
+            }
+
+            await GetData();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+}

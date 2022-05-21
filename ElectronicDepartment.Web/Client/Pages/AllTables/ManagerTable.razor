@@ -1,0 +1,102 @@
+﻿@page "/Managers"
+
+@using ElectronicDepartment.Web.Shared
+@using ElectronicDepartment.Web.Shared.User.Manager.Responce
+@using ElectronicDepartment.Web.Shared.Common
+@using static ElectronicDepartment.Web.Shared.CafedraController
+@inject NavigationManager NavManager
+
+<h3>ManagerTable</h3>
+
+<MatTable Items="ApiResult.Data"
+          class="mat-elevation-z5"
+          UseSortHeaderRow="true"
+          ShowPaging="true"
+          FilterByColumnName="FirstName">
+    <MatTableHeader>
+        <MatSortHeaderRow SortChanged="@SortData">
+            <MatSortHeader SortId="no">Action</MatSortHeader>
+            <MatSortHeader SortId="FirstName">FirstName</MatSortHeader>
+            <MatSortHeader SortId="MiddleName">MiddleName</MatSortHeader>
+            <MatSortHeader SortId="LastName">LastName</MatSortHeader>
+            <MatSortHeader SortId="BirthDay">BirthDay</MatSortHeader>
+            <MatSortHeader SortId="PhoneNumber">PhoneNumber</MatSortHeader>
+            <MatSortHeader SortId="Email">Email</MatSortHeader>
+            <MatSortHeader SortId="Gender">Gender</MatSortHeader>
+        </MatSortHeaderRow>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>
+            <MatButton Raised="true" Icon="edit" title="Edit" OnClick="@(item => NavManager.NavigateTo($"/manage/manager/{@context.Id}"))"></MatButton>
+        </td>
+        <td>@context.FirstName</td>
+        <td>@context.MiddleName</td>
+        <td>@context.LastName</td>
+        <td>@context.BirthDay</td>
+        <td>@context.PhoneNumber</td>
+        <td>@context.Email</td>
+        <td>@context.Gender</td>
+    </MatTableRow>
+</MatTable>
+
+@code {
+    MatPaginator matTablePagenator { get; set; } = null;
+
+    [Inject]
+    HttpClient HttpClient { get; set; }
+
+
+    public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
+        {
+            PageIndex = 0,
+            PageSize = 1000,
+        };
+
+    public ApiResultViewModel<GetManagerViewModel> ApiResult { get; set; } = new ApiResultViewModel<GetManagerViewModel>();
+
+    public async Task GetData()
+    {
+        var result = await HttpClient.PostAsJsonAsync("api/manager/GetApiManager", Pagenator);
+
+        if (result.IsSuccessStatusCode)
+        {
+            ApiResult = await result.Content.ReadFromJsonAsync<ApiResultViewModel<GetManagerViewModel>>();
+        }
+    }
+
+    public async Task SortData(MatSortChangedEvent sort)
+    {
+        if (!(sort == null || sort.Direction == MatSortDirection.None || string.IsNullOrEmpty(sort.SortId)))
+        {
+            if (sort.Direction == MatSortDirection.Desc)
+            {
+                Pagenator.SortingRequests = new List<SortingRequest>()
+                    {
+                        new SortingRequest()
+                        {
+                            SortColumn = sort.SortId,
+                            SortOrder = "DESC"
+                        }
+                    };
+            }
+            else
+            {
+                Pagenator.SortingRequests = new List<SortingRequest>()
+                    {
+                        new SortingRequest()
+                        {
+                            SortColumn = sort.SortId,
+                            SortOrder = "ASC"
+                        }
+                    };
+            }
+
+            await GetData();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+}

@@ -19,13 +19,19 @@ namespace ElectronicDepartment.BusinessLogic
 
         public Task UpdateStudent(UpdateStudentViewModel viewModel);
 
+        public Task<BaseStudentViewModel> GetStudent(string id);
+
         public Task<string> CreateTeacher(CreateTeacherViewModel viewModel);
 
         public Task UpdateTeacher(UpdateTeacherViewModel viewModel);
 
+        public Task<BaseTeacherViewModel> GetTeacher(string id);
+
         public Task<string> CreateManager(CreateManagerViewModel viewModel);
 
         public Task UpdateManager(UpdateManagerViewModel viewModel);
+
+        public Task<BaseManagerViewModel> GetManager(string id);
 
         public Task<ApiResultViewModel<GetTeacherViewModel>> GetApiTeacherResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests);
         

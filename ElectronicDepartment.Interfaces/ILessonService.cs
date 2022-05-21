@@ -11,7 +11,7 @@ namespace ElectronicDepartment.Interfaces
 
         public Task UpdateLesson(UpdateLessonViewModel viewModel);
 
-        public Task<GetLessonViewModel> GetLesson(int id);
+        public Task<UpdateLessonViewModel> GetLesson(int id);
 
         public Task<IEnumerable<GetCourseLessonViewModel>> GetCourseLessons(int courseId);
 

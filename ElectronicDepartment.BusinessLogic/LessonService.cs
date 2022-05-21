@@ -75,7 +75,7 @@ namespace ElectronicDepartment.BusinessLogic
             }
         }
 
-        public async Task<GetLessonViewModel> GetLesson(int id)
+        public async Task<UpdateLessonViewModel> GetLesson(int id)
         {
             var lesson = await _context.Lessons.FirstOrDefaultAsync(item => item.Id == id);
             DbNullReferenceException.ThrowExceptionIfNull(lesson, nameof(id), id.ToString());
@@ -83,14 +83,12 @@ namespace ElectronicDepartment.BusinessLogic
             return ExtractViewModel(lesson);
         }
 
-        private GetLessonViewModel ExtractViewModel(Lesson item) => new GetLessonViewModel()
+        private UpdateLessonViewModel ExtractViewModel(Lesson item) => new UpdateLessonViewModel()
         {
             Id = item.Id,
             CourseId = item.CourseTeacher.CourseId,
-            CourseName = item.CourseTeacher.Course.Name,
-            CourseTeacherId = item.CourseTeacherId,
+            TeacherId = item.CourseTeacher.TeacherId,
             LessonType = item.LessonType,
-            CreatedAt = item.CreatedAt,
             LessonStart = item.LessonStart,
             Duration = item.Duration
         };

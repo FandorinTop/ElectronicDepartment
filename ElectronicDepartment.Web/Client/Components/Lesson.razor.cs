@@ -67,7 +67,6 @@ namespace ElectronicDepartment.Web.Client.Components
             }
         }
 
-
         private async Task DeleteLessonAsync()
         {
             _isDelete = true;
