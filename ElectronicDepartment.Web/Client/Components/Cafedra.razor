@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.IO
 @using System.Net.Http.Headers
+@inject NavigationManager NavManager
 
 <EditForm Model="Model" OnSubmit="Success">
     <DataAnnotationsValidator />

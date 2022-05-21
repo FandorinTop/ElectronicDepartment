@@ -6,7 +6,16 @@
 @using static ElectronicDepartment.Web.Shared.CafedraController
 @inject NavigationManager NavManager
 
-<h3>TeacherTable</h3>
+<div class="mat-layout-grid-inner">
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
+        <h3>TeacherTable</h3>
+    </div>
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8">
+    </div>
+    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
+        <MatButton OnClick="@(item => NavManager.NavigateTo($"/manage/teacher/"))" Icon="create_new_folder" style="display: flex; justify-content: flex-end">Add</MatButton>
+    </div>
+</div>
 
 <MatTable Items="ApiResult.Data"
           class="mat-elevation-z5"

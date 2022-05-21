@@ -1,0 +1,62 @@
+﻿@page "/manage/Manager/{Id?}"
+
+@using System.ComponentModel.DataAnnotations
+@using System.IO
+@using System.Net.Http.Headers
+@using ElectronicDepartment.Common.Enums
+@using ElectronicDepartment.Web.Shared.Cafedra.Responce
+@using ElectronicDepartment.Web.Shared.Group.Responce
+
+<EditForm Model="Model" OnValidSubmit="Success">
+    <DataAnnotationsValidator />
+    <div class="mat-layout-grid">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            @Title
+        </div>
+        <MatDivider />
+        <br />
+        <div class="mat-layout-grid-inner">
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                    <p>
+                        <MatDatePicker Label="BirthDay" @bind-Value="Model.BirthDay" FullWidth="true" />
+                        <ValidationMessage For="@(() => Model.BirthDay)" />
+                    </p>
+                    <p>
+                        <MatTextField Label="Email" @bind-Value="Model.Email" FullWidth="true" />
+                        <ValidationMessage For="@(() => Model.Email)" />
+                    </p>
+                    <p>
+                        <MatTextField Label="FirstName" @bind-Value="Model.FirstName" FullWidth="true" />
+                        <ValidationMessage For="@(() => Model.FirstName)" />
+                    </p>
+                    <p>
+                        <MatTextField Label="MiddleName" @bind-Value="Model.MiddleName" FullWidth="true" />
+                        <ValidationMessage For="@(() => Model.MiddleName)" />
+                    </p>
+                    <p>
+                        <MatTextField Label="LastName" @bind-Value="Model.LastName" FullWidth="true" />
+                        <ValidationMessage For="@(() => Model.LastName)" />
+                    </p>
+                    <p>
+                        <MatTextField Label="PhoneNumber" @bind-Value="Model.PhoneNumber" FullWidth="true" />
+                        <ValidationMessage For="@(() => Model.PhoneNumber)" />
+                    </p>
+                    <p>
+                        <MatSelectValue Label="Genders" Context="item1" @bind-Value="@Model.Gender" Items="@Genders" ValueSelector="@(item1 => item1)" FullWidth="true">
+                        </MatSelectValue>
+                        <ValidationMessage For="@(() => Model.Gender)" />
+                    </p>
+                </div>
+
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                </div>
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                    <MatButton Type="submit" Raised="true">Send</MatButton>
+                </div>
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>

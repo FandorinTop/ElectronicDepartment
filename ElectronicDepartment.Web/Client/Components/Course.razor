@@ -7,6 +7,7 @@
 @using ElectronicDepartment.Web.Shared.CourseTeacher.Responce
 @using ElectronicDepartment.Web.Shared.Lesson
 @using ElectronicDepartment.Web.Shared.Lesson.Responce
+@inject NavigationManager NavManager
 
 <head>
 
@@ -109,7 +110,7 @@
 
             <MatTable Context="lesson"
                       Items="Lessons"
-                      disabled = "@_isDelete"
+                      disabled="@_isDelete"
                       SelectionChanged="@(async action => await SelectionChangedEvent(action))"
                       AllowSelection="true">
                 <MatTableHeader>
@@ -124,6 +125,7 @@
                     <td>
                         <MatButton Raised="true" OnClick="@(e => OpenDialog(true))" Icon="edit" title="Edit Lesson"></MatButton>
                         <MatButton Raised="true" OnClick="@(async e => await DeleteLessonAsync())" Icon="restore_from_trash" title="Delete Lesson"></MatButton>
+                        <MatButton Raised="true" OnClick="@(e => NavManager.NavigateTo($"manage/lesson/{@lesson.Id}"))" Icon="call_made" title="Go to lesson"></MatButton>
                     </td>
                     <td>@lesson.LessonType</td>
                     <td>@lesson.LessonStart</td>
@@ -137,7 +139,7 @@
 </div>
 
 
-@code{
+@code {
     MatAutocompleteList<GetCourseTeacherSelectorViewModel> matAutocomplete = null;
     MatTable<GetCourseLessonViewModel> matTable = null;
 }

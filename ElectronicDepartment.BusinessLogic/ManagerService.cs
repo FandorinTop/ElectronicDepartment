@@ -15,6 +15,7 @@ using ElectronicDepartment.Interfaces;
 using ElectronicDepartment.Web.Shared;
 using ElectronicDepartment.Web.Shared.User.Teacher.Responce;
 using ElectronicDepartment.Web.Shared.User.Manager.Responce;
+using ElectronicDepartment.Web.Shared.Login;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -127,6 +128,11 @@ namespace ElectronicDepartment.BusinessLogic
             }
 
             throw new Exception(result.Errors.Select(item => item.Description).Aggregate("", (res, item) => res += item));
+        }
+
+        public async Task<LoginResult> Login(LoginResult login)
+        {
+            var 
         }
     }
 
