@@ -13,6 +13,8 @@ namespace ElectronicDepartment.BusinessLogic
 
         public Task GetAllMark();
 
+        public Task Remove(int id);
+
         public Task<IEnumerable<GetStudentSelectViewModel>> GetStudentSelector();
 
         public Task<IEnumerable<GetStudentOnTheLessonViewModel>> GetStudentsWithMarkViewModel(int id);

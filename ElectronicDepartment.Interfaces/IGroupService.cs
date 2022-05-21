@@ -12,7 +12,5 @@ namespace ElectronicDepartment.Interfaces
         public Task Update(UpdateGroupViewModel viewModel);
 
         public Task<IEnumerable<GetGroupSelectorViewModel>> GetSelector();
-
-        public Task<IEnumerable<GetStudentSelectorViewModel>> GetStudentSelector();
     }
 }

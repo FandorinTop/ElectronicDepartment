@@ -47,6 +47,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
             return Ok(responce);
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetStudentOnLesson(int id)
         {
             var responce = await _markService.GetStudentsWithMarkViewModel(id);
@@ -54,6 +55,12 @@ namespace ElectronicDepartment.Web.Server.Controllers
             return Ok(responce);
         }
 
-        
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _markService.Remove(id);
+
+            return Ok();
+        }
     }
 }

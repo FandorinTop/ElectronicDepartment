@@ -33,14 +33,6 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStudentSelector()
-        {
-            var selector = await _groupService.GetStudentSelector();
-
-            return Ok(selector);
-        }
-
-        [HttpGet]
         public async Task<IActionResult> GetSelector()
         {
             var selector = await _groupService.GetSelector();

@@ -13,6 +13,12 @@ namespace ElectronicDepartment.Web.Client.Components
 {
     public partial class Lesson
     {
+        private int _index = -1;
+        private bool _isDelete = false;
+        private bool _isStudentOnLessonEdit = false;
+        private bool dialogIsOpen = false;
+        private bool snackBar = false;
+
         private List<GetStudentSelectViewModel> FreeStudentSelectors { get; set; } = new List<GetStudentSelectViewModel>();
         private List<GetStudentOnTheLessonViewModel> StudentInLessons { get; set; } = new List<GetStudentOnTheLessonViewModel>();
 
@@ -40,6 +46,98 @@ namespace ElectronicDepartment.Web.Client.Components
             LessonType.Exam,
         };
 
+        private async Task CloseDialog()
+        {
+            dialogIsOpen = false;
+
+            if (!_isStudentOnLessonEdit)
+            {
+                await AddStudentOnLessonAsync(StudentOnLesson);
+            }
+            else
+            {
+                await UpdateStudentOnLessonAsync(StudentOnLesson);
+
+                var selected = StudentInLessons.FirstOrDefault(item => item.Id == StudentOnLesson.Id);
+
+                if (selected is not null)
+                {
+                    selected.Mark = StudentOnLesson.Value;
+                }
+            }
+        }
+
+
+        private async Task DeleteLessonAsync()
+        {
+            _isDelete = true;
+
+            if (StudentOnLesson != null && StudentOnLesson.Id > 0)
+            {
+                var studentOnLesson = StudentInLessons.FirstOrDefault(item => item.Id == StudentOnLesson.Id);
+
+                if (studentOnLesson is null)
+                {
+                    return;
+                }
+                else
+                {
+                    await RemoveFromLessonAsync(studentOnLesson);
+                    _isDelete = false;
+
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private void OpenDialog(bool isEdit)
+        {
+            _isStudentOnLessonEdit = isEdit;
+
+            if (!_isStudentOnLessonEdit)
+            {
+                StudentOnLesson = new UpdateMarkViewModel();
+            }
+
+            dialogIsOpen = true;
+        }
+
+
+        public async Task SelectionChangedEvent(object obj)
+        {
+            var lesson = obj as GetStudentOnTheLessonViewModel;
+
+            if (lesson is null)
+            {
+                StudentOnLesson = new UpdateMarkViewModel();
+            }
+            else
+            {
+                StudentOnLesson = new UpdateMarkViewModel()
+                {
+                    Id = lesson.Id,
+                    Value = lesson.Mark,
+                    LessonId = Id.Value,
+                    StudentId = lesson.StudentId
+                };
+
+                if (_isDelete)
+                {
+                    await RemoveFromLessonAsync(lesson);
+
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private string CustomStringSelectorHandler(GetStudentSelectViewModel item)
+        {
+            StudentOnLesson.StudentId = item.Id;
+
+            return item.FullName;
+        }
+
+
         public async Task Success()
         {
             Console.WriteLine("Success");
@@ -56,10 +154,11 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task GetAsync()
         {
-            if (Id == null)
+            if (Id != null)
             {
                 var result = await HttpClient.GetFromJsonAsync<UpdateLessonViewModel>($"api/Lesson/Get?id={Id}");
                 await GetStudentAsync();
+                await GetStudentOnLesson();
                 Console.WriteLine("getResult: " + result);
 
                 Model = result ?? Model;
@@ -68,11 +167,15 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task GetStudentAsync()
         {
-            var studentValue = await HttpClient.GetFromJsonAsync<List<GetStudentSelectViewModel>>($"api/Mark/GetStudentLesson");
+            var studentValue = await HttpClient.GetFromJsonAsync<IEnumerable<GetStudentSelectViewModel>>($"api/Mark/GetStudentLesson");
 
             if(studentValue != null)
             {
-                FreeStudentSelectors.AddRange(studentValue.Where(item => item.LessonIds.Contains(Id.Value)));
+                var removed = studentValue
+                    .Where(item => !item.LessonIds.Contains(Id.Value))
+                    .ToList();
+
+                FreeStudentSelectors.AddRange(removed);
             }
         }
 
@@ -84,9 +187,25 @@ namespace ElectronicDepartment.Web.Client.Components
         }
 
         #region Requests
-        private async void AddStudentOnLessonAsync(UpdateMarkViewModel addViewModel)
+
+        private async Task UpdateStudentOnLessonAsync(UpdateMarkViewModel addViewModel)
         {
-            var result = await HttpClient.PostAsJsonAsync(@"api/lesson/create", addViewModel);
+            var result = await HttpClient.PutAsJsonAsync(@"api/mark/update", addViewModel);
+
+            if (result.IsSuccessStatusCode)
+            {
+                await JS.InvokeAsync<object>("alert", $"Successful updated student on lesson");
+            }
+            else
+            {
+                await JS.InvokeAsync<object>("alert", $"UpdateError {await result.Content.ReadAsStringAsync()}");
+            }
+        }
+
+        private async Task AddStudentOnLessonAsync(UpdateMarkViewModel addViewModel)
+        {
+            addViewModel.LessonId = Id.Value;
+            var result = await HttpClient.PostAsJsonAsync(@"api/mark/create", addViewModel);
 
             if (result.IsSuccessStatusCode)
             {
@@ -104,9 +223,9 @@ namespace ElectronicDepartment.Web.Client.Components
 
                     StudentInLessons.Add(studentOnLessonItem);
                     FreeStudentSelectors.Remove(student);
-
-                    await JS.InvokeAsync<object>("alert", $"Successful added student on lesson");
                 }
+
+                await JS.InvokeAsync<object>("alert", $"Successful added student on lesson");
             }
             else
             {
@@ -114,7 +233,7 @@ namespace ElectronicDepartment.Web.Client.Components
             }
         }
 
-        private async void RemoveFromLessonAsync(GetStudentOnTheLessonViewModel removeViewModel)
+        private async Task RemoveFromLessonAsync(GetStudentOnTheLessonViewModel removeViewModel)
         {
             var result = await HttpClient.DeleteAsync(@$"api/mark/delete?id={removeViewModel.Id}");
 
@@ -128,7 +247,7 @@ namespace ElectronicDepartment.Web.Client.Components
                     Map(freeStudent, studentInLesson);
 
                     StudentInLessons.Remove(studentInLesson);
-                    FreeStudentSelectors.Remove(freeStudent);
+                    FreeStudentSelectors.Add(freeStudent);
 
                     await JS.InvokeAsync<object>("alert", $"Successful removed student from lesson");
                 }
@@ -139,7 +258,7 @@ namespace ElectronicDepartment.Web.Client.Components
             }
         }
         #endregion
-
+        
         private void Map(GetStudentOnTheLessonViewModel lesson, GetStudentSelectViewModel freeStudent)
         {
             lesson.StudentFullName = freeStudent.FullName;
@@ -168,7 +287,7 @@ namespace ElectronicDepartment.Web.Client.Components
                 CourseId = Model.CourseId
             };
 
-            var result = await HttpClient.PutAsync(@"api/Manager/UpdateStudent", JsonContent.Create(updateModel));
+            var result = await HttpClient.PutAsync(@"api/Lesson/Update", JsonContent.Create(updateModel));
 
             if (result.IsSuccessStatusCode)
             {

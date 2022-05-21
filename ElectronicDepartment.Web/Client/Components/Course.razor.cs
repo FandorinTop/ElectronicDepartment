@@ -250,15 +250,11 @@ namespace ElectronicDepartment.Web.Client.Components
 
                 if (_isDelete)
                 {
-                    
-
                     await DeleteLessonAsync();
 
                     StateHasChanged();
                 }
             }
-
-            
         }
         #endregion
 

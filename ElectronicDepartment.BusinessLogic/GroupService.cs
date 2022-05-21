@@ -6,6 +6,7 @@ using ElectronicDepartment.Web.Shared.Group;
 using ElectronicDepartment.Web.Shared.Group.Responce;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Interfaces;
+using ElectronicDepartment.Web.Shared.Mark.Responce;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -81,7 +82,5 @@ namespace ElectronicDepartment.BusinessLogic
 
             return responce;
         }
-
-        
     }
 }

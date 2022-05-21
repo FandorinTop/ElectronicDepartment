@@ -21,11 +21,18 @@ namespace ElectronicDepartment.BusinessLogic
         {
             await Validate(viewModel);
 
-            var mark = new StudentOnLesson();
-            Map(mark, viewModel);
+            var mark = await _context.Marks
+                .FirstOrDefaultAsync(item => item.LessonId == viewModel.LessonId 
+                && item.StudentId == viewModel.StudentId);
 
-            await _context.Marks.AddAsync(mark);
-            await _context.SaveChangesAsync();
+            if(mark is null)
+            {
+                mark = new StudentOnLesson();
+                Map(mark, viewModel);
+
+                await _context.Marks.AddAsync(mark);
+                await _context.SaveChangesAsync();
+            }
 
             return mark.Id;
         }
@@ -58,7 +65,7 @@ namespace ElectronicDepartment.BusinessLogic
         {
             var data = await _context.Marks
                 .Where(item => item.DeletedAt == DateTime.MinValue)
-                .Where(item => item.Id == id)
+                .Where(item => item.LessonId == id)
                 .Select(item => new
                 {
                     item.Id,
@@ -144,6 +151,17 @@ namespace ElectronicDepartment.BusinessLogic
             mark.Mark = viewModel.Value;
             mark.StudentId = viewModel.StudentId;
             mark.LessonId = viewModel.LessonId;
+        }
+
+        public async Task Remove(int id)
+        {
+            var mark = await _context.Marks.FirstOrDefaultAsync(item => item.Id == id);
+
+            if(mark is not null)
+            {
+                _context.Remove(mark);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
