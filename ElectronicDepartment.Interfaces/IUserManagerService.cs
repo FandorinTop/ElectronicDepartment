@@ -1,6 +1,11 @@
-﻿using ElectronicDepartment.Web.Shared.User.Manager;
+﻿using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
+using ElectronicDepartment.Web.Shared.User.Manager;
+using ElectronicDepartment.Web.Shared.User.Manager.Responce;
 using ElectronicDepartment.Web.Shared.User.Student;
+using ElectronicDepartment.Web.Shared.User.Student.Responce;
 using ElectronicDepartment.Web.Shared.User.Teacher;
+using ElectronicDepartment.Web.Shared.User.Teacher.Responce;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -21,5 +26,11 @@ namespace ElectronicDepartment.BusinessLogic
         public Task<string> CreateManager(CreateManagerViewModel viewModel);
 
         public Task UpdateManager(UpdateManagerViewModel viewModel);
+
+        public Task<ApiResultViewModel<GetTeacherViewModel>> GetApiTeacherResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests);
+        
+        public Task<ApiResultViewModel<GetManagerViewModel>> GetApiManagerResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests);
+       
+        public Task<ApiResultViewModel<GetStudentViewModel>> GetApiStudentResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests);
     }
 }

@@ -5,6 +5,8 @@ using ElectronicDepartment.Web.Shared.Course;
 using ElectronicDepartment.Web.Shared.Course.Responce;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Interfaces;
+using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -71,6 +73,20 @@ namespace ElectronicDepartment.BusinessLogic
                 }).ToListAsync();
 
             return responce;
+        }
+
+        public async Task<ApiResultViewModel<GetCourseViewModel>> GetApiResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.Courses.AsQueryable();
+            var dbResponce = await ApiResult<GetCourseViewModel>.CreateAsync(item => new GetCourseViewModel()
+            {
+                CreatedAt = item.CreatedAt,
+                Description = item.Description,
+                Id = item.Id,
+                Name = item.Name,
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
         }
     }
 }

@@ -7,6 +7,8 @@ using ElectronicDepartment.Web.Shared.Group.Responce;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Interfaces;
 using ElectronicDepartment.Web.Shared.Mark.Responce;
+using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -81,6 +83,20 @@ namespace ElectronicDepartment.BusinessLogic
                             }).ToListAsync();
 
             return responce;
+        }
+
+        public async Task<ApiResultViewModel<GetGroupViewModel>> GetApiResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.Groups.AsQueryable();
+            var dbResponce = await ApiResult<GetGroupViewModel>.CreateAsync(item => new GetGroupViewModel()
+            {
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                Name = item.Name,
+                StudentCount = item.Students.Count()
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
         }
     }
 }

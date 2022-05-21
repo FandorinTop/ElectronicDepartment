@@ -4,6 +4,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ElectronicDepartment.Web.Shared
 {
@@ -49,8 +50,8 @@ namespace ElectronicDepartment.Web.Shared
             IQueryable<T> source,
             int pageIndex,
             int pageSize,
-            List<SortingRequest> sortingRequests = null,
-            List<FilterRequest> filterRequests = null)
+            IEnumerable<SortingRequest> sortingRequests = null,
+            IEnumerable<FilterRequest> filterRequests = null)
         {
             if (filterRequests is not null)
                 foreach (var filterRequest in filterRequests)
@@ -121,7 +122,10 @@ namespace ElectronicDepartment.Web.Shared
                     }
                 }
 
-                source = source.OrderBy(sortingString);
+                if (!string.IsNullOrWhiteSpace(sortingString))
+                {
+                    source = source.OrderBy(sortingString);
+                }
             }
             
             source = source
@@ -129,6 +133,106 @@ namespace ElectronicDepartment.Web.Shared
                 .Take(pageSize);
 
             var data = await source.ToListAsync();
+
+            return new ApiResult<T>(
+                data,
+                count,
+                pageIndex,
+                pageSize,
+                sortingRequests,
+                filterRequests);
+        }
+
+        public static async Task<ApiResult<T>> CreateAsync<T, D>(
+            Expression<Func<D, T>> selector,
+            IQueryable<D> source,
+            int pageIndex,
+            int pageSize,
+            IEnumerable<SortingRequest> sortingRequests = null,
+            IEnumerable<FilterRequest> filterRequests = null)
+        {
+            if (filterRequests is not null)
+                foreach (var filterRequest in filterRequests)
+                {
+                    if (!string.IsNullOrEmpty(filterRequest.FilterColumn)
+                   && !string.IsNullOrEmpty(filterRequest.FilterQuery)
+                   && IsValidProperty(filterRequest.FilterColumn))
+                    {
+                        var type = GetPropertyValue(filterRequest.FilterColumn);
+
+                        if (type == typeof(int))
+                        {
+                            source = source.Where(
+                           string.Format("{0}.Equals(@0)",
+                           filterRequest.FilterColumn),
+                           Convert.ToInt32(filterRequest.FilterQuery));
+
+                        }
+                        else if (type == typeof(decimal))
+                        {
+                            source = source.Where(
+                          string.Format("{0}.Equals(@0)",
+                          filterRequest.FilterColumn),
+                          Convert.ToDecimal(filterRequest.FilterQuery));
+                        }
+
+                        else if (filterRequest.IsPartFilter)
+                        {
+                            source = source.Where(
+                                string.Format("{0}.Contains(@0)",
+                                filterRequest.FilterColumn),
+                                filterRequest.FilterQuery);
+                        }
+                        else
+                        {
+                            source = source.Where(
+                               string.Format("{0}.Equals(@0)",
+                               filterRequest.FilterColumn),
+                               filterRequest.FilterQuery);
+                        }
+                    }
+                }
+
+            var count = await source.CountAsync();
+
+            if (sortingRequests is not null)
+            {
+                var sortingString = String.Empty;
+
+                foreach (var sortingRequest in sortingRequests)
+                {
+                    if (!string.IsNullOrEmpty(sortingRequest.SortColumn)
+                    && IsValidProperty(sortingRequest.SortColumn))
+                    {
+                        sortingRequest.SortOrder = !string.IsNullOrEmpty(sortingRequest.SortOrder)
+                            && sortingRequest.SortOrder.ToUpper() == "ASC"
+                            ? "ASC"
+                            : "DESC";
+
+                        if (string.IsNullOrEmpty(sortingString))
+                        {
+                            sortingString += $"{sortingRequest.SortColumn} {sortingRequest.SortOrder}";
+                        }
+                        else
+                        {
+                            sortingString += $", {sortingRequest.SortColumn} {sortingRequest.SortOrder}";
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(sortingString))
+                {
+                    source = source.OrderBy(sortingString);
+                }
+            }
+
+            source = source
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize);
+
+            var data = await source
+                .Select(selector)
+                .ToListAsync();
 
             return new ApiResult<T>(
                 data,

@@ -1,6 +1,7 @@
 ﻿using ElectronicDepartment.BusinessLogic;
 using ElectronicDepartment.Web.Shared.Mark;
 using Microsoft.AspNetCore.Mvc;
+using static ElectronicDepartment.Web.Shared.CafedraController;
 
 namespace ElectronicDepartment.Web.Server.Controllers
 {
@@ -61,6 +62,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
             await _markService.Remove(id);
 
             return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetApiResponce(GetApiBodyRequest viewModel)
+        {
+            var responce = await _markService.GetApiMarkResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
+
+            return Ok(responce);
         }
     }
 }

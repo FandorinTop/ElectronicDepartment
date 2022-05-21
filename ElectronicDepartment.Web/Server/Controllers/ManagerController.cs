@@ -3,6 +3,7 @@ using ElectronicDepartment.Web.Shared.User.Manager;
 using ElectronicDepartment.Web.Shared.User.Student;
 using ElectronicDepartment.Web.Shared.User.Teacher;
 using Microsoft.AspNetCore.Mvc;
+using static ElectronicDepartment.Web.Shared.CafedraController;
 
 namespace ElectronicDepartment.Web.Server.Controllers
 {
@@ -63,6 +64,30 @@ namespace ElectronicDepartment.Web.Server.Controllers
             await _managerService.UpdateTeacher(viewModel);
 
             return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetApiStudent(GetApiBodyRequest viewModel)
+        {
+            var responce = await _managerService.GetApiStudentResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
+
+            return Ok(responce);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetApiManager(GetApiBodyRequest viewModel)
+        {
+            var responce = await _managerService.GetApiManagerResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
+
+            return Ok(responce);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetApiTeacher(GetApiBodyRequest viewModel)
+        {
+            var responce = await _managerService.GetApiTeacherResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
+
+            return Ok(responce);
         }
     }
 }

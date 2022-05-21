@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using static ElectronicDepartment.Common.Constants;
 using ElectronicDepartment.Web.Shared.Common;
 using ElectronicDepartment.Interfaces;
+using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.User.Teacher.Responce;
+using ElectronicDepartment.Web.Shared.User.Manager.Responce;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -34,6 +37,65 @@ namespace ElectronicDepartment.BusinessLogic
             _roleManager = roleManager;
             _passwordHasher = passwordHasher;
             _passwordValidator = passwordValidator;
+        }
+
+        public async Task<ApiResultViewModel<GetTeacherViewModel>> GetApiTeacherResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.Teachers.AsQueryable();
+            var dbResponce = await ApiResult<GetTeacherViewModel>.CreateAsync(item => new GetTeacherViewModel()
+            {
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                AcademicAcredition = item.AcademicAcredition,
+                BirthDay = item.BirthDay,
+                Email = item.Email,
+                FirstName = item.FirstName,
+                Gender = item.Gender,
+                LastName = item.LastName,
+                MiddleName = item.MiddleName,
+                PhoneNumber = item.PhoneNumber
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
+        }
+
+        public async Task<ApiResultViewModel<GetStudentViewModel>> GetApiStudentResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.Students.AsQueryable();
+            var dbResponce = await ApiResult<GetStudentViewModel>.CreateAsync(item => new GetStudentViewModel()
+            {
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                GroupId = item.GroupId,
+                BirthDay = item.BirthDay,
+                Email = item.Email,
+                FirstName = item.FirstName,
+                Gender = item.Gender,
+                LastName = item.LastName,
+                MiddleName = item.MiddleName,
+                PhoneNumber = item.PhoneNumber
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
+        }
+
+        public async Task<ApiResultViewModel<GetManagerViewModel>> GetApiManagerResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.Managers.AsQueryable();
+            var dbResponce = await ApiResult<GetManagerViewModel>.CreateAsync(item => new GetManagerViewModel()
+            {
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                BirthDay = item.BirthDay,
+                Email = item.Email,
+                FirstName = item.FirstName,
+                Gender = item.Gender,
+                LastName = item.LastName,
+                MiddleName = item.MiddleName,
+                PhoneNumber = item.PhoneNumber
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
         }
 
         public async Task UpdatePassword(string userId, string password, string newPassword)
@@ -220,4 +282,6 @@ namespace ElectronicDepartment.BusinessLogic
             manager.UserType = UserType.Manager;
         }
     }
+
+    
 }

@@ -5,6 +5,8 @@ using ElectronicDepartment.Web.Shared.Cafedra;
 using ElectronicDepartment.Web.Shared.Cafedra.Responce;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Interfaces;
+using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -73,6 +75,24 @@ namespace ElectronicDepartment.BusinessLogic
             cafedra.Description = viewModel.Description;
             cafedra.Name = viewModel.Name;
             cafedra.Phone = viewModel.Phone;
+        }
+
+        public async Task<ApiResultViewModel<GetCafedraViewModel>> GetApiResponce(int pageIndex,
+            int pageSize,
+            IEnumerable<SortingRequest> sortingRequests = null,
+            IEnumerable<FilterRequest> filterRequests = null)
+        {
+            var dataQuery = _context.Cafedras.AsQueryable();
+            var dbResponce = await ApiResult<GetCafedraViewModel>.CreateAsync(item => new GetCafedraViewModel()
+            {
+                CreatedAt = item.CreatedAt,
+                Description = item.Description,
+                Id = item.Id,
+                Name = item.Name,
+                Phone = item.Phone
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
         }
     }
 }

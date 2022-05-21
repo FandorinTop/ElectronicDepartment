@@ -6,6 +6,8 @@ using ElectronicDepartment.Web.Shared.Lesson;
 using ElectronicDepartment.Web.Shared.Lesson.Responce;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Interfaces;
+using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -144,6 +146,25 @@ namespace ElectronicDepartment.BusinessLogic
             });
 
             return result;
+        }
+
+        public async Task<ApiResultViewModel<GetLessonViewModel>> GetApiLessonResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.Lessons.AsQueryable();
+            var dbResponce = await ApiResult<GetLessonViewModel>.CreateAsync(item => new GetLessonViewModel()
+            {
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                CourseId = item.CourseTeacher.CourseId,
+                CourseName = item.CourseTeacher.Course.Name,
+                CourseTeacherId = item.CourseTeacherId,
+                CourseTeacher = item.CourseTeacher.Teacher.LastName,
+                Duration = item.Duration,
+                LessonStart = item.LessonStart,
+                LessonType = item.LessonType
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
         }
 
         public async Task DeleteLesson(int id)

@@ -1,0 +1,59 @@
+﻿@page "/Teachers"
+
+@using ElectronicDepartment.Web.Shared
+@using ElectronicDepartment.Web.Shared.User.Teacher.Responce
+@using static ElectronicDepartment.Web.Shared.CafedraController
+<h3>TeacherTable</h3>
+
+<MatTable Items="ApiResult.Data" class="mat-elevation-z5">
+    <MatTableHeader>
+        <th>Action</th>
+        <th>GroupName</th>
+        <th>Student FullName</th>
+        <th>Mark</th>
+        <th>StudentGroupId</th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>
+            <MatButton Raised="true" Icon="edit" title="Edit Lesson"></MatButton>
+            <MatButton Raised="true" Icon="restore_from_trash" title="Delete Lesson"></MatButton>
+        </td>
+        <td>@context.FirstName</td>
+        <td>@context.MiddleName</td>
+        <td>@context.LastName</td>
+        <td>@context.AcademicAcredition</td>
+        <td>@context.BirthDay</td>
+        <td>@context.PhoneNumber</td>
+        <td>@context.Email</td>
+        <td>@context.Gender</td>
+    </MatTableRow>
+</MatTable>
+
+@code {
+
+    [Inject]
+    HttpClient HttpClient { get; set; }
+
+    public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
+        {
+            PageIndex = 0,
+            PageSize = 10,
+        };
+
+    public ApiResultViewModel<GetTeacherViewModel> ApiResult { get; set; } = new ApiResultViewModel<GetTeacherViewModel>();
+
+    public async Task GetData()
+    {
+        var result = await HttpClient.PostAsJsonAsync("api/manager/GetApiTeacher", Pagenator);
+
+        if (result.IsSuccessStatusCode)
+        {
+            ApiResult = await result.Content.ReadFromJsonAsync<ApiResultViewModel<GetTeacherViewModel>>();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+}

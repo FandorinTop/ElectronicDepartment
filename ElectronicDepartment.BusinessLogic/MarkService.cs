@@ -5,6 +5,8 @@ using ElectronicDepartment.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Web.Shared.Mark.Responce;
 using ElectronicDepartment.Interfaces;
+using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -117,6 +119,24 @@ namespace ElectronicDepartment.BusinessLogic
             });
 
             return responce;
+        }
+
+        public async Task<ApiResultViewModel<GetMarkResponce>> GetApiMarkResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.Marks.AsQueryable();
+            var dbResponce = await ApiResult<GetMarkResponce>.CreateAsync(item => new GetMarkResponce()
+            {
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                LessonId = item.LessonId,
+                StudentId = item.StudentId,
+                FirstName = item.Student.FirstName,
+                LastName = item.Student.LastName,
+                MiddleName = item.Student.MiddleName,
+                Value = item.Mark
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
         }
 
         private GetMarkResponce ExtractMarkResponce(StudentOnLesson item) => new GetMarkResponce()

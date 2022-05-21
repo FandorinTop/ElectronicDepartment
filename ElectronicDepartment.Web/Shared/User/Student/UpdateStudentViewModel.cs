@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ElectronicDepartment.Web.Shared.User.Student.Responce;
+using System.ComponentModel.DataAnnotations;
 
 namespace ElectronicDepartment.Web.Shared.User.Student
 {

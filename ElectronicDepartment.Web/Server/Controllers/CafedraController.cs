@@ -2,12 +2,13 @@
 using ElectronicDepartment.Web.Shared.Cafedra;
 using Microsoft.AspNetCore.Mvc;
 using ElectronicDepartment.Interfaces;
+using static ElectronicDepartment.Web.Shared.CafedraController;
 
 namespace ElectronicDepartment.Web.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class CafedraController : ControllerBase
+    public partial class CafedraController : ControllerBase
     {
         private ICafedraService _cafedraService;
 
@@ -46,6 +47,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
             await _cafedraService.Update(viewModel);
 
             return Ok(true);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetApiResponce(GetApiBodyRequest viewModel)
+        {
+            var responce = await _cafedraService.GetApiResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
+
+            return Ok(responce);
         }
     }
 }

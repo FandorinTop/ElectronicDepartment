@@ -1,4 +1,6 @@
-﻿using ElectronicDepartment.Web.Shared.Group;
+﻿using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
+using ElectronicDepartment.Web.Shared.Group;
 using ElectronicDepartment.Web.Shared.Group.Responce;
 
 namespace ElectronicDepartment.Interfaces
@@ -12,5 +14,7 @@ namespace ElectronicDepartment.Interfaces
         public Task Update(UpdateGroupViewModel viewModel);
 
         public Task<IEnumerable<GetGroupSelectorViewModel>> GetSelector();
+
+        public Task<ApiResultViewModel<GetGroupViewModel>> GetApiResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests);
     }
 }

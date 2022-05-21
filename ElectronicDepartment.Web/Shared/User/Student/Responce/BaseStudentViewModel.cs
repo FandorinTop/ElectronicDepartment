@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ElectronicDepartment.Web.Shared.User.Student
+namespace ElectronicDepartment.Web.Shared.User.Student.Responce
 {
 
     public class BaseStudentViewModel : BaseUserViewModel

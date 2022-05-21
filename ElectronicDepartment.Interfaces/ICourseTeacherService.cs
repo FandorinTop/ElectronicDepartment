@@ -1,4 +1,6 @@
-﻿using ElectronicDepartment.Web.Shared.CourseTeacher;
+﻿using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
+using ElectronicDepartment.Web.Shared.CourseTeacher;
 using ElectronicDepartment.Web.Shared.CourseTeacher.Responce;
 
 namespace ElectronicDepartment.Interfaces
@@ -19,5 +21,6 @@ namespace ElectronicDepartment.Interfaces
 
         public Task<IEnumerable<GetCourseTeacherSelectorViewModel>> GetSelector();
 
+        public Task<ApiResultViewModel<GetCourseTeacherViewModel>> GetApiCourseTeacherResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests);
     }
 }

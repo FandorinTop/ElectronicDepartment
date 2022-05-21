@@ -14,6 +14,8 @@ namespace ElectronicDepartment.Web.Shared.Lesson.Responce
         public int? CourseId { get; set; }
 
         public string CourseName { get; set; }
+
+        public string CourseTeacher { get; set; }
         
         public int? CourseTeacherId { get; set; }
 

@@ -1,27 +1,15 @@
 ﻿using ElectronicDepartment.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ElectronicDepartment.Web.Shared.User.Student.Responce
+namespace ElectronicDepartment.Web.Shared
 {
-    public class GetStudentViewModel
+    public class GetBaseUserViewModel
     {
         public string Id { get; set; }
 
-        [Required]
-        [MaxLength(128)]
         public string FirstName { get; set; } = default!;
 
-        [Required]
-        [MaxLength(128)]
         public string LastName { get; set; } = default!;
 
-        [Required]
-        [MaxLength(128)]
         public string MiddleName { get; set; } = default!;
 
         public DateTime BirthDay { get; set; }
@@ -31,8 +19,6 @@ namespace ElectronicDepartment.Web.Shared.User.Student.Responce
         public string Email { get; set; } = default!;
 
         public string PhoneNumber { get; set; }
-
-        public int GroupId { get; set; }
 
         public DateTime CreatedAt { get; set; }
     }

@@ -2,6 +2,7 @@
 using ElectronicDepartment.Interfaces;
 using ElectronicDepartment.Web.Shared.Course;
 using Microsoft.AspNetCore.Mvc;
+using static ElectronicDepartment.Web.Shared.CafedraController;
 
 namespace ElectronicDepartment.Web.Server.Controllers
 {
@@ -46,6 +47,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
             await _courseService.Update(viewModel);
 
             return Ok(true);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetApiResponce(GetApiBodyRequest viewModel)
+        {
+            var responce = await _courseService.GetApiResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
+
+            return Ok(responce);
         }
     }
 }

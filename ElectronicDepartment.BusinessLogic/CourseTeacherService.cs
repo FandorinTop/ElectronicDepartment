@@ -5,6 +5,8 @@ using ElectronicDepartment.Web.Shared.CourseTeacher;
 using ElectronicDepartment.Web.Shared.CourseTeacher.Responce;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Interfaces;
+using ElectronicDepartment.Web.Shared;
+using ElectronicDepartment.Web.Shared.Common;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -148,6 +150,20 @@ namespace ElectronicDepartment.BusinessLogic
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<ApiResultViewModel<GetCourseTeacherViewModel>> GetApiCourseTeacherResponce(int pageIndex, int pageSize, IEnumerable<SortingRequest> sortingRequests, IEnumerable<FilterRequest> filterRequests)
+        {
+            var dataQuery = _context.CourseTeachers.AsQueryable();
+            var dbResponce = await ApiResult<GetCourseTeacherViewModel>.CreateAsync(item => new GetCourseTeacherViewModel()
+            {
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                CourseId = item.CourseId,
+                TeacherId = item.TeacherId
+            }, dataQuery, pageIndex, pageSize, sortingRequests, filterRequests);
+
+            return dbResponce;
         }
 
         protected async Task Delete(int id)

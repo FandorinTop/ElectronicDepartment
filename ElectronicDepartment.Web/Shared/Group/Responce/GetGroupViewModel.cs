@@ -15,7 +15,8 @@ namespace ElectronicDepartment.Web.Shared.Group.Responce
 
         public DateTime CreatedAt { get; set; }
 
-        public ApiResultViewModel<GetShortStudentGroupItem> Students { get; set; }
+        public int StudentCount { get; set; }
+
     }
 
     public class GetShortCourseGroupItem
