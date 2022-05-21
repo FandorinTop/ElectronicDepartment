@@ -97,11 +97,10 @@ namespace ElectronicDepartment.Web.Client.Components
             var updateModel = new UpdateLessonViewModel()
             {
                 Id = Id.Value,
-                CourseId = Model.CourseId,
                 Duration = Model.Duration,
                 LessonStart = Model.LessonStart,
                 LessonType = Model.LessonType,
-                CourseTeacherId = Model.CourseTeacherId
+                TeacherId = Model.TeacherId
             };
 
             var result = await HttpClient.PutAsync(@"api/Manager/UpdateStudent", JsonContent.Create(updateModel));

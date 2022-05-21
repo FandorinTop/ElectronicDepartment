@@ -1,17 +1,18 @@
 ﻿using ElectronicDepartment.Common.Exceptions;
 using ElectronicDepartment.DataAccess;
 using ElectronicDepartment.DomainEntities;
+using ElectronicDepartment.Web.Shared.CourseTeacher;
 using ElectronicDepartment.Web.Shared.Lesson;
 using ElectronicDepartment.Web.Shared.Lesson.Responce;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicDepartment.BusinessLogic
 {
-    public class LessonService : ILessonService
+    public class LessonService : CourseTeacherService, ILessonService
     {
         ApplicationDbContext _context;
 
-        public LessonService(ApplicationDbContext context)
+        public LessonService(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
@@ -20,19 +21,25 @@ namespace ElectronicDepartment.BusinessLogic
         {
             await Validate(viewModel);
 
-            var lesson = new Lesson();
-            Map(lesson, viewModel);
+            var courseTeacher = await GetOrCreateDbEntity(new CreateCourseTeacherViewModel()
+            {
+                CourseId = viewModel.CourseId,
+                TeacherId = viewModel.TeacherId
+            });
 
-            await _context.AddAsync(lesson);
+            var lesson = new Lesson();
+            Map(lesson, viewModel, courseTeacher);
+
+            courseTeacher.Lessons.Add(lesson);
+
+            await _context.Lessons.AddAsync(lesson);
             await _context.SaveChangesAsync();
 
             return lesson.Id;
         }
 
-        private void Map(Lesson lesson, BaseLessonViewModel viewModel)
+        private void Map(Lesson lesson, BaseLessonViewModel viewModel, CourseTeacher courseTeacher)
         {
-            lesson.CourseId = viewModel.CourseId;
-            lesson.CourseTeacherId = viewModel.CourseTeacherId;
             lesson.LessonType = viewModel.LessonType;
             lesson.LessonStart = viewModel.LessonStart;
             lesson.Duration = viewModel.Duration;
@@ -45,10 +52,24 @@ namespace ElectronicDepartment.BusinessLogic
             var lesson = await _context.Lessons.FirstOrDefaultAsync(item => item.Id == viewModel.Id);
             DbNullReferenceException.ThrowExceptionIfNull(lesson, nameof(viewModel.Id), viewModel.Id.ToString());
 
-            Map(lesson, viewModel);
+            var courseTeacher = await GetOrCreateDbEntity(new CreateCourseTeacherViewModel()
+            {
+                CourseId = viewModel.CourseId,
+                TeacherId = viewModel.TeacherId
+            });
 
-            await _context.AddAsync(lesson);
-            await _context.SaveChangesAsync();
+            Map(lesson, viewModel, courseTeacher);
+
+            courseTeacher.Lessons.Add(lesson);
+
+            try
+            {
+                var res = await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public async Task<GetLessonViewModel> Get(int id)
@@ -62,7 +83,8 @@ namespace ElectronicDepartment.BusinessLogic
         private GetLessonViewModel ExtractViewModel(Lesson item) => new GetLessonViewModel()
         {
             Id = item.Id,
-            CourseId = item.CourseId,
+            CourseId = item.CourseTeacher.CourseId,
+            CourseName = item.CourseTeacher.Course.Name,
             CourseTeacherId = item.CourseTeacherId,
             LessonType = item.LessonType,
             CreatedAt = item.CreatedAt,
@@ -72,20 +94,55 @@ namespace ElectronicDepartment.BusinessLogic
 
         private async Task Validate(BaseLessonViewModel viewModel)
         {
+            await ValidateTeacher(viewModel);
             await ValidateCourse(viewModel);
-            await ValidateCourseTeacher(viewModel);
         }
 
-        private async Task ValidateCourseTeacher(BaseLessonViewModel viewModel)
+        private async Task ValidateTeacher(BaseLessonViewModel viewModel)
         {
-            var courseTeacher = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == viewModel.CourseTeacherId);
-            DbNullReferenceException.ThrowExceptionIfNull(courseTeacher, nameof(viewModel.CourseTeacherId), viewModel.CourseTeacherId.ToString());
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(item => item.Id == viewModel.TeacherId);
+            DbNullReferenceException.ThrowExceptionIfNull(teacher, nameof(viewModel.TeacherId), viewModel.TeacherId.ToString());
         }
 
         private async Task ValidateCourse(BaseLessonViewModel viewModel)
         {
-            var course = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == viewModel.CourseId);
+            var course = await _context.Courses.FirstOrDefaultAsync(item => item.Id == viewModel.CourseId);
             DbNullReferenceException.ThrowExceptionIfNull(course, nameof(viewModel.CourseId), viewModel.CourseId.ToString());
+        }
+
+        public async Task<IEnumerable<GetCourseLessonViewModel>> GetCourseLessons(int courseId)
+        {
+            var lessons = await _context.Lessons
+                .Where(item => item.DeletedAt == DateTime.MinValue)
+                .Where(item => item.CourseTeacher.CourseId == courseId)
+                .Select(item => new
+                {
+                    item.Id,
+                    item.CourseTeacher.Teacher.FirstName,
+                    item.CourseTeacher.Teacher.MiddleName,
+                    item.CourseTeacher.Teacher.LastName,
+                    item.CourseTeacher.TeacherId,
+                    item.Duration,
+                    item.LessonStart,
+                    item.LessonType,
+                    TotalStudentOnLesson = item.StudentOnLessons
+                        .Where(item => item.DeletedAt == DateTime.MinValue)
+                        .Count()
+                })
+                .ToListAsync();
+
+            var result = lessons.Select(item => new GetCourseLessonViewModel()
+            {
+                Id = item.Id,
+                Duration = item.Duration,
+                LessonStart = item.LessonStart,
+                LessonType = item.LessonType,
+                TeacherId = item.TeacherId,
+                TeacherFullName = $"{item.FirstName} {item.MiddleName} {item.LastName}",
+                TotalStudentOnLesson = item.TotalStudentOnLesson
+            });
+
+            return result;
         }
     }
 }

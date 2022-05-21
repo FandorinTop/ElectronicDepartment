@@ -5,10 +5,6 @@ namespace ElectronicDepartment.DomainEntities
 {
     public class Lesson : BaseEntity
     {
-        public int CourseId { get; set; }
-
-        public virtual Course Course { get; set; } = default;
-
         public int? CourseTeacherId { get; set; }
 
         [ForeignKey(nameof(CourseTeacherId))]

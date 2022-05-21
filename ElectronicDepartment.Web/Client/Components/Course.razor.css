@@ -1,0 +1,8 @@
+﻿.mdc-dialog .mdc-dialog__container {
+    width: 100%;
+}
+
+.mdc-dialog .mdc-dialog__surface {
+    max-width: none;
+    width: 70%;
+}

@@ -11,8 +11,6 @@ namespace ElectronicDepartment.Web.Shared.CourseTeacher.Responce
     {
         public string Id { get; set; }
 
-        public IEnumerable<int> CourseIds { get; set; } = new int[0];
-
         public string FirstName { get; set; }
 
         public string MiddleName { get; set; }
@@ -20,10 +18,5 @@ namespace ElectronicDepartment.Web.Shared.CourseTeacher.Responce
         public string LastName { get; set; }
 
         public AcademicAcredition AcademicAcredition { get; set; }
-
-        public GetCourseTeacherSelectorViewModel[] Where()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

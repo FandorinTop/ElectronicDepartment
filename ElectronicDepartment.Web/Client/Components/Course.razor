@@ -3,20 +3,91 @@
 @using System.ComponentModel.DataAnnotations
 @using System.IO
 @using System.Net.Http.Headers
+@using ElectronicDepartment.Web.Shared.Course
 @using ElectronicDepartment.Web.Shared.CourseTeacher.Responce
+@using ElectronicDepartment.Web.Shared.Lesson
+@using ElectronicDepartment.Web.Shared.Lesson.Responce
 
-<EditForm Model="Model" OnValidSubmit="Success">
-    <DataAnnotationsValidator />
-    <div class="mat-layout-grid">
-        <div class="mat-layout-grid-inner">
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5" style="text-align: center;">
-                Header 1
-            </div>
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-7" style="text-align: center;">
-                @TableHeader
-            </div>
+<head>
 
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
+    <base href="~/" />
+
+</head>
+
+
+<MatDialog @bind-IsOpen="@dialogIsOpen">
+    <MatDialogTitle>
+        Create Lesson
+    </MatDialogTitle>
+    <EditForm Model="Lesson" OnValidSubmit="Success" style="min-width:500px; min-height:450px; padding: 15px; margin: 15px;">
+        <DataAnnotationsValidator />
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
+
+            <p>
+                <MatDatePicker Label="Lesson Start" @bind-Value="Lesson.LessonStart" FullWidth="true" style="" />
+                <ValidationMessage For="@(() => Lesson.LessonStart)" />
+            </p>
+
+            <p>
+                <MatNumericUpDownField Label="Duration" @bind-Value="Lesson.Duration" FullWidth="true" />
+                <ValidationMessage For="@(() => Lesson.Duration)" />
+            </p>
+
+            <p>
+                <MatSelectValue Label="LessonTypes" Context="item1" @bind-Value="@Lesson.LessonType" Items="@LessonTypes" ValueSelector="@(item1 => item1)" FullWidth="true">
+                </MatSelectValue>
+                <ValidationMessage For="@(() => Lesson.LessonType)" />
+            </p>
+            <MatAutocompleteList Context="teacher"
+                                 @ref="matAutocomplete"
+                                 Items="@Teachers"
+                                 On
+                                 TItem="GetCourseTeacherSelectorViewModel"
+                                 Label="SelectTeacher"
+                                 FullWidth="true"
+                                 CustomStringSelector="CustomStringSelectorHandler"
+                                 bind
+                                 disabled="@(!Teachers.Any())">
+                <ItemTemplate>
+                    <div style="display: flex; flex-direction: row; width: 100%;">
+                        <div style="flex: 1; text-align: left;">@teacher.FirstName</div>
+                        <div style="flex: 1; text-align: left;">@teacher.MiddleName</div>
+                        <div style="flex: 1; text-align: left;">@teacher.LastName</div>
+                        <div style="flex: 1; text-align: left;">@teacher.AcademicAcredition</div>
+                    </div>
+                </ItemTemplate>
+            </MatAutocompleteList>
+            <ValidationMessage For="@(() => Lesson.TeacherId)" />
+        </div>
+    </EditForm>
+    <MatDialogActions>
+        <MatButton OnClick="CloseDialog">Add</MatButton>
+        <MatButton>Close</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5" style="text-align: center;">
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-7" style="text-align: center;">
+            <MatButton Disabled="@(Id == null)" Raised="true" OnClick="@(e => OpenDialog(false))" Icon="edit" title="Create Lesson">Add Lesson</MatButton>
+        </div>
+    </div>
+</div>
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5" style="text-align: center;">
+            Course
+        </div>
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-7" style="text-align: center;">
+            Lessons
+        </div>
+
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+            <EditForm Model="Model" OnValidSubmit="Success">
+                <DataAnnotationsValidator />
                 <p>
                     <MatTextField Label="@nameof(Model.Name)" @bind-Value="Model.Name" FullWidth="true" />
                     <ValidationMessage For="@(() => Model.Name)" />
@@ -25,53 +96,50 @@
                     <MatTextField TextArea=true Label="@nameof(Model.Description)" @bind-Value="Model.Description" FullWidth="true" />
                     <ValidationMessage For="@(() => Model.Description)" />
                 </p>
-                <MatAutocompleteList Context="teacher"
-                                     @ref="MatAutocompleteList"
-                                     Items="@FreeTeacherContainer"
-                                     TItem="GetCourseTeacherSelectorViewModel"
-                                     Label="@MatSelectorLabel"
-                                     FullWidth="true"
-                                     CustomStringSelector="item => item.LastName"
-                                     ValueChanged="AddTeacherToCourse"
-                                     ShowClearButton="@(FreeTeacherContainer.Any())"
-                                     disabled="@(!FreeTeacherContainer.Any())">
-                    <ItemTemplate>
-                        <div style="display: flex; flex-direction: row; width: 100%;">
-                            <div style="flex: 1; text-align: left;">@teacher.FirstName</div>
-                            <div style="flex: 1; text-align: left;">@teacher.MiddleName</div>
-                            <div style="flex: 1; text-align: left;">@teacher.LastName</div>
-                            <div style="flex: 1; text-align: left;">@teacher.AcademicAcredition</div>
-                        </div>
-                    </ItemTemplate>
-                </MatAutocompleteList>
 
                 <div style="padding-top: 15px;">
                     <MatButton Type="submit" Raised="true">Send</MatButton>
                 </div>
+            </EditForm>
 
-            </div>  
-
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-7" style="text-align: center;">
-                <MatTable Context="teacher"
-                          Items="CourseTeacherContainer"
-                          OnRowDbClick="RemoveTeacherFromCourse"
-                          AllowSelection="true">
-                    <MatTableHeader>
-                        <th>FirstName</th>
-                        <th>MiddleName</th>
-                        <th>LastName</th>
-                        <th>AcademicAcredition</th>
-                    </MatTableHeader>
-                    <MatTableRow>
-                        <td>@teacher.FirstName</td>
-                        <td>@teacher.MiddleName</td>
-                        <td>@teacher.LastName</td>
-                        <td>@teacher.AcademicAcredition</td>
-                    </MatTableRow>
-                </MatTable>
-            </div>
 
 
         </div>
+
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8" style="text-align: center;">
+
+            <MatTable Context="lesson"
+                      Items="Lessons"
+                      SelectionChanged="@(async action => await SelectionChangedEvent(action))"
+                      AllowSelection="true">
+                <MatTableHeader>
+                    <th>Action</th>
+                    <th>LessonType</th>
+                    <th>StartedAt</th>
+                    <th>Duration</th>
+                    <th>Teacher</th>
+                    <th>TotalStudentOnLesson</th>
+                </MatTableHeader>
+                <MatTableRow>
+                    <td>
+                        <MatButton Raised="true" OnClick="@(e => OpenDialog(true))" Icon="edit" title="Edit Lesson"></MatButton>
+                        <MatButton Raised="true" OnClick="@(e => DeleteLessonAsync())" Icon="restore_from_trash" title="Delete Lesson"></MatButton>
+                    </td>
+                    <td>@lesson.LessonType</td>
+                    <td>@lesson.LessonStart</td>
+                    <td>@lesson.Duration</td>
+                    <td>@lesson.TeacherFullName</td>
+                    <td>@lesson.TotalStudentOnLesson</td>
+                </MatTableRow>
+            </MatTable>
+        </div>
     </div>
-</EditForm>
+</div>
+
+
+@code{
+    MatAutocompleteList<GetCourseTeacherSelectorViewModel> matAutocomplete = null;
+}
+
+
+

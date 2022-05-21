@@ -31,6 +31,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
             return Ok(LessonViewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCourseLesson(int courseId)
+        {
+            var responce = await _lessonService.GetCourseLessons(courseId);
+
+            return Ok(responce);
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(UpdateLessonViewModel viewModel)
         {

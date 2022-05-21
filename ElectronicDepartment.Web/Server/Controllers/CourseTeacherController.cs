@@ -24,7 +24,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(IEnumerable<CreateCourseTeacherViewModel> viewModel)
+        public async Task<IActionResult> CreateRange(IEnumerable<CreateCourseTeacherViewModel> viewModel)
         {
             var ids = await _courseTeacherService.CreateRange(viewModel);
 
@@ -56,15 +56,18 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int courseId, int teacherId)
         {
+            //TODO FIX
+            //_courseTeacherService.Remove();
+
             return Ok();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteRange(IEnumerable<int> ids)
+        public async Task<IActionResult> DeleteRange(IEnumerable<KeyValuePair<int, int>> ids)
         {
-            await _courseTeacherService.RemoveRange(ids);
+            //await _courseTeacherService.RemoveRange(ids);
 
             return Ok();
         }

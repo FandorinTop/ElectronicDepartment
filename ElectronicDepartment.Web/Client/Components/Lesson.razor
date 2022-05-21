@@ -34,7 +34,7 @@
                         <ValidationMessage For="@(() => Model.LessonType)" />
                     </p>
                     
-                    <p>
+                    @*<p>
                         <MatAutocompleteList Context="teacher" Items="@TeacherSelectors" TItem="GetCourseTeacherSelectorViewModel" Label="Select teacher" CustomStringSelector="@(i => i.LastName)" @bind-Value="@SelectedTeacher">
                             <ItemTemplate>
                                 <div style="display: flex; flex-direction: row; width: 100%;">
@@ -62,7 +62,7 @@
                             </ItemTemplate>
                         </MatAutocompleteList>
                         <ValidationMessage For="@(() => Model.CourseId)" />
-                    </p>
+                    </p>*@
                 </div>
 
                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">

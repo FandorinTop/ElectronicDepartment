@@ -39,7 +39,7 @@ namespace ElectronicDepartment.BusinessLogic
             return entity.Id;
         }
 
-        private async Task<CourseTeacher> GetOrCreateDbEntity(CreateCourseTeacherViewModel viewModel)
+        protected async Task<CourseTeacher> GetOrCreateDbEntity(CreateCourseTeacherViewModel viewModel)
         {
             await Validate(viewModel);
 
@@ -58,19 +58,19 @@ namespace ElectronicDepartment.BusinessLogic
             return courseTeacher;
         }
 
-        private async Task Validate(BaseCourseTeacherViewModel viewModel)
+        protected async Task Validate(BaseCourseTeacherViewModel viewModel)
         {
             await ValidateTeacher(viewModel);
             await ValidateCourse(viewModel);
         }
 
-        private async Task ValidateTeacher(BaseCourseTeacherViewModel viewModel)
+        protected async Task ValidateTeacher(BaseCourseTeacherViewModel viewModel)
         {
             var teacher = await _context.Teachers.FirstOrDefaultAsync(item => item.Id == viewModel.TeacherId.ToString());
             DbNullReferenceException.ThrowExceptionIfNull(teacher, nameof(viewModel.TeacherId), viewModel.TeacherId.ToString());
         }
 
-        private async Task ValidateCourse(BaseCourseTeacherViewModel viewModel)
+        protected async Task ValidateCourse(BaseCourseTeacherViewModel viewModel)
         {
             var course = await _context.Courses.FirstOrDefaultAsync(item => item.Id == viewModel.CourseId);
             DbNullReferenceException.ThrowExceptionIfNull(course, nameof(viewModel.CourseId), viewModel.CourseId.ToString());
@@ -103,7 +103,7 @@ namespace ElectronicDepartment.BusinessLogic
             return ExtractViewModel(courseTeacher);
         }
 
-        private GetCourseTeacherViewModel ExtractViewModel(CourseTeacher item) => new GetCourseTeacherViewModel()
+        protected GetCourseTeacherViewModel ExtractViewModel(CourseTeacher item) => new GetCourseTeacherViewModel()
         {
             Id = item.Id,
             CourseId = item.CourseId,
@@ -111,7 +111,7 @@ namespace ElectronicDepartment.BusinessLogic
             CreatedAt = item.CreatedAt
         };
 
-        private void Map(CourseTeacher courseTeacher, BaseCourseTeacherViewModel viewModel)
+        protected void Map(CourseTeacher courseTeacher, BaseCourseTeacherViewModel viewModel)
         {
             courseTeacher.CourseId = viewModel.CourseId;
             courseTeacher.TeacherId = viewModel.TeacherId;
@@ -128,7 +128,6 @@ namespace ElectronicDepartment.BusinessLogic
                                 LastName = item.LastName,
                                 MiddleName = item.MiddleName,
                                 AcademicAcredition = item.AcademicAcredition,
-                                CourseIds = item.Courses.Select(item => item.CourseId)
                             }).ToListAsync();
 
             return responce;
@@ -150,7 +149,7 @@ namespace ElectronicDepartment.BusinessLogic
             await _context.SaveChangesAsync();
         }
 
-        private async Task Delete(int id)
+        protected async Task Delete(int id)
         {
             var course = await _context.CourseTeachers.FirstOrDefaultAsync(item => item.Id == id);
 

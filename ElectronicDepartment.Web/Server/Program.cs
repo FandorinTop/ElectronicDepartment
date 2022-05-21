@@ -70,6 +70,7 @@ namespace Company.WebApplication1
             app.UseRouting();
 
             app.MapRazorPages();
+            app.MapDefaultControllerRoute();
             app.MapControllers();
             app.MapFallbackToFile("index.html");
 

@@ -59,6 +59,10 @@ a, .btn-link {
     color: white;
 }
 
+.mdc-dialog .mdc-dialog__surface {
+    max-width: none !important;
+}
+
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
