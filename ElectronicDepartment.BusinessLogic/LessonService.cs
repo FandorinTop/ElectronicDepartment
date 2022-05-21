@@ -18,7 +18,7 @@ namespace ElectronicDepartment.BusinessLogic
             _context = context;
         }
 
-        public async Task<int> Create(CreateLessonViewModel viewModel)
+        public async Task<int> CreateLesson(CreateLessonViewModel viewModel)
         {
             await Validate(viewModel);
 
@@ -46,7 +46,7 @@ namespace ElectronicDepartment.BusinessLogic
             lesson.Duration = viewModel.Duration;
         }
 
-        public async Task Update(UpdateLessonViewModel viewModel)
+        public async Task UpdateLesson(UpdateLessonViewModel viewModel)
         {
             await Validate(viewModel);
 
@@ -73,7 +73,7 @@ namespace ElectronicDepartment.BusinessLogic
             }
         }
 
-        public async Task<GetLessonViewModel> Get(int id)
+        public async Task<GetLessonViewModel> GetLesson(int id)
         {
             var lesson = await _context.Lessons.FirstOrDefaultAsync(item => item.Id == id);
             DbNullReferenceException.ThrowExceptionIfNull(lesson, nameof(id), id.ToString());
@@ -144,6 +144,17 @@ namespace ElectronicDepartment.BusinessLogic
             });
 
             return result;
+        }
+
+        public async Task DeleteLesson(int id)
+        {
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(item => item.Id == id);
+
+            if(lesson is not null)
+            {
+                _context.Remove(lesson);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

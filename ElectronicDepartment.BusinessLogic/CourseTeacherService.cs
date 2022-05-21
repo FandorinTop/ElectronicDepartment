@@ -134,13 +134,13 @@ namespace ElectronicDepartment.BusinessLogic
             return responce;
         }
 
-        public async Task Remove(int id)
+        public async Task RemoveTeacher(int id)
         {
             await Delete(id);
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveRange(IEnumerable<int> ids)
+        public async Task RemoveTeacherRange(IEnumerable<int> ids)
         {
             foreach (var id in ids)
             {

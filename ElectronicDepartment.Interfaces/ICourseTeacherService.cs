@@ -13,9 +13,9 @@ namespace ElectronicDepartment.Interfaces
 
         public Task<GetCourseTeacherViewModel> Get(int id);
 
-        public Task Remove(int id);
+        public Task RemoveTeacher(int id);
 
-        public Task RemoveRange(IEnumerable<int> ids);
+        public Task RemoveTeacherRange(IEnumerable<int> ids);
 
         public Task<IEnumerable<GetCourseTeacherSelectorViewModel>> GetSelector();
 

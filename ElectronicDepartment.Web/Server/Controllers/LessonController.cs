@@ -19,7 +19,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateLessonViewModel viewModel)
         {
-            var id = await _lessonService.Create(viewModel);
+            var id = await _lessonService.CreateLesson(viewModel);
 
             return Ok(id.ToString());
         }
@@ -27,7 +27,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(int id)
         {
-            var LessonViewModel = await _lessonService.Get(id);
+            var LessonViewModel = await _lessonService.GetLesson(id);
 
             return Ok(LessonViewModel);
         }
@@ -43,9 +43,18 @@ namespace ElectronicDepartment.Web.Server.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UpdateLessonViewModel viewModel)
         {
-            await _lessonService.Update(viewModel);
+            await _lessonService.UpdateLesson(viewModel);
 
             return Ok(true);
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _lessonService.DeleteLesson(id);
+
+            return Ok(true);
+        }
+
     }
 }

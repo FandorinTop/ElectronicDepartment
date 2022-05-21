@@ -41,7 +41,6 @@
             <MatAutocompleteList Context="teacher"
                                  @ref="matAutocomplete"
                                  Items="@Teachers"
-                                 On
                                  TItem="GetCourseTeacherSelectorViewModel"
                                  Label="SelectTeacher"
                                  FullWidth="true"
@@ -110,6 +109,7 @@
 
             <MatTable Context="lesson"
                       Items="Lessons"
+                      disabled = "@_isDelete"
                       SelectionChanged="@(async action => await SelectionChangedEvent(action))"
                       AllowSelection="true">
                 <MatTableHeader>
@@ -123,7 +123,7 @@
                 <MatTableRow>
                     <td>
                         <MatButton Raised="true" OnClick="@(e => OpenDialog(true))" Icon="edit" title="Edit Lesson"></MatButton>
-                        <MatButton Raised="true" OnClick="@(e => DeleteLessonAsync())" Icon="restore_from_trash" title="Delete Lesson"></MatButton>
+                        <MatButton Raised="true" OnClick="@(async e => await DeleteLessonAsync())" Icon="restore_from_trash" title="Delete Lesson"></MatButton>
                     </td>
                     <td>@lesson.LessonType</td>
                     <td>@lesson.LessonStart</td>
@@ -139,6 +139,7 @@
 
 @code{
     MatAutocompleteList<GetCourseTeacherSelectorViewModel> matAutocomplete = null;
+    MatTable<GetCourseLessonViewModel> matTable = null;
 }
 
 

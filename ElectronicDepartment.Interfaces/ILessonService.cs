@@ -5,12 +5,14 @@ namespace ElectronicDepartment.Interfaces
 {
     public interface ILessonService
     {
-        public Task<int> Create(CreateLessonViewModel viewModel);
+        public Task<int> CreateLesson(CreateLessonViewModel viewModel);
 
-        public Task Update(UpdateLessonViewModel viewModel);
+        public Task UpdateLesson(UpdateLessonViewModel viewModel);
 
-        public Task<GetLessonViewModel> Get(int id);
+        public Task<GetLessonViewModel> GetLesson(int id);
 
         public Task<IEnumerable<GetCourseLessonViewModel>> GetCourseLessons(int courseId);
+
+        public Task DeleteLesson(int id);
     }
 }

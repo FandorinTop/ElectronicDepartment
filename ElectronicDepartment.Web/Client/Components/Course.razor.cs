@@ -205,9 +205,9 @@ namespace ElectronicDepartment.Web.Client.Components
                 }
                 else
                 {
+                    Lessons.Remove(lesson);
                     await DeleteLessonRequest(lesson);
                     _isDelete = false;
-                    StateHasChanged();
                 }
             }
         }
@@ -215,6 +215,15 @@ namespace ElectronicDepartment.Web.Client.Components
         private async Task DeleteLessonRequest(GetCourseLessonViewModel lesson)
         {
             var responce = await HttpClient.DeleteAsync(@$"api/lesson/delete?id={lesson.Id}");
+
+            if (responce.IsSuccessStatusCode)
+            {
+                return;
+            }
+            else
+            {
+
+            }
 
             throw new NotImplementedException();
         }
@@ -238,12 +247,18 @@ namespace ElectronicDepartment.Web.Client.Components
                     LessonType = lesson.LessonType,
                     TeacherId = lesson.TeacherId,
                 };
+
+                if (_isDelete)
+                {
+                    
+
+                    await DeleteLessonAsync();
+
+                    StateHasChanged();
+                }
             }
 
-            if (_isDelete)
-            {
-                await DeleteLessonAsync();
-            }
+            
         }
         #endregion
 
