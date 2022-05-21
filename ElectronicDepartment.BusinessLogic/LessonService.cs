@@ -5,6 +5,7 @@ using ElectronicDepartment.Web.Shared.CourseTeacher;
 using ElectronicDepartment.Web.Shared.Lesson;
 using ElectronicDepartment.Web.Shared.Lesson.Responce;
 using Microsoft.EntityFrameworkCore;
+using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.BusinessLogic
 {

@@ -1,4 +1,5 @@
 ﻿using ElectronicDepartment.BusinessLogic;
+using ElectronicDepartment.Interfaces;
 using ElectronicDepartment.Web.Shared.Course;
 using Microsoft.AspNetCore.Mvc;
 

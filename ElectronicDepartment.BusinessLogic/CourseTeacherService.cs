@@ -4,6 +4,7 @@ using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.CourseTeacher;
 using ElectronicDepartment.Web.Shared.CourseTeacher.Responce;
 using Microsoft.EntityFrameworkCore;
+using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.BusinessLogic
 {

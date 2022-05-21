@@ -1,7 +1,7 @@
 ﻿using ElectronicDepartment.Web.Shared.Cafedra;
 using ElectronicDepartment.Web.Shared.Cafedra.Responce;
 
-namespace ElectronicDepartment.BusinessLogic
+namespace ElectronicDepartment.Interfaces
 {
     public interface ICafedraService
     {

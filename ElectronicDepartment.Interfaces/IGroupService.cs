@@ -1,7 +1,7 @@
 ﻿using ElectronicDepartment.Web.Shared.Group;
 using ElectronicDepartment.Web.Shared.Group.Responce;
 
-namespace ElectronicDepartment.BusinessLogic
+namespace ElectronicDepartment.Interfaces
 {
     public interface IGroupService
     {

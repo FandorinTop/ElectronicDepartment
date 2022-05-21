@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElectronicDepartment.DataAccess\ElectronicDepartment.DataAccess.csproj" />
+    <ProjectReference Include="..\ElectronicDepartment.Interfaces\ElectronicDepartment.Interfaces.csproj" />
     <ProjectReference Include="..\ElectronicDepartment.Web\Shared\ElectronicDepartment.Web.Shared.csproj" />
     <ProjectReference Include="..\kursova\ElectronicDepartment.DomainEntities.csproj" />
   </ItemGroup>

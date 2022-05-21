@@ -4,6 +4,7 @@ using ElectronicDepartment.Web.Shared.Mark;
 using ElectronicDepartment.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using ElectronicDepartment.Web.Shared.Mark.Responce;
+using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.BusinessLogic
 {

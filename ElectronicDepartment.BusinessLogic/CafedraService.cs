@@ -4,6 +4,7 @@ using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.Cafedra;
 using ElectronicDepartment.Web.Shared.Cafedra.Responce;
 using Microsoft.EntityFrameworkCore;
+using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.BusinessLogic
 {

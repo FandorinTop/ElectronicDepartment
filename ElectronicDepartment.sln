@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectronicDepartment.Busine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectronicDepartment.Web.Shared", "ElectronicDepartment.Web\Shared\ElectronicDepartment.Web.Shared.csproj", "{28335358-5312-4DC4-8D9F-BE500D8259A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronicDepartment.Interfaces", "ElectronicDepartment.Interfaces\ElectronicDepartment.Interfaces.csproj", "{C669E0EA-164C-4DCF-94CD-4589764692A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{28335358-5312-4DC4-8D9F-BE500D8259A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28335358-5312-4DC4-8D9F-BE500D8259A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28335358-5312-4DC4-8D9F-BE500D8259A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C669E0EA-164C-4DCF-94CD-4589764692A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C669E0EA-164C-4DCF-94CD-4589764692A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C669E0EA-164C-4DCF-94CD-4589764692A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C669E0EA-164C-4DCF-94CD-4589764692A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

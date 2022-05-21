@@ -1,7 +1,7 @@
 ﻿using ElectronicDepartment.Web.Shared.Course;
 using ElectronicDepartment.Web.Shared.Course.Responce;
 
-namespace ElectronicDepartment.BusinessLogic
+namespace ElectronicDepartment.Interfaces
 {
     public interface ICourseService
     {

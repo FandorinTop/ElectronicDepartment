@@ -5,6 +5,7 @@ using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.Group;
 using ElectronicDepartment.Web.Shared.Group.Responce;
 using Microsoft.EntityFrameworkCore;
+using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.BusinessLogic
 {

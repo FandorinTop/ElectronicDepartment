@@ -1,6 +1,7 @@
 ﻿using ElectronicDepartment.BusinessLogic;
 using ElectronicDepartment.Web.Shared.Lesson;
 using Microsoft.AspNetCore.Mvc;
+using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.Web.Server.Controllers
 {

@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ElectronicDepartment.BusinessLogic\ElectronicDepartment.BusinessLogic.csproj" />
     <ProjectReference Include="..\..\ElectronicDepartment.DataAccess\ElectronicDepartment.DataAccess.csproj" />
+    <ProjectReference Include="..\..\ElectronicDepartment.Interfaces\ElectronicDepartment.Interfaces.csproj" />
     <ProjectReference Include="..\..\kursova\ElectronicDepartment.DomainEntities.csproj" />
     <ProjectReference Include="..\Client\ElectronicDepartment.Web.Client.csproj" />
     <ProjectReference Include="..\Shared\ElectronicDepartment.Web.Shared.csproj" />

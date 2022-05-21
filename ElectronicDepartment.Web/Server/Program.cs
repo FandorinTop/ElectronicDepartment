@@ -8,6 +8,7 @@ using ElectronicDepartment.DomainEntities;
 using Microsoft.AspNetCore.Identity;
 using static ElectronicDepartment.BusinessLogic.Helpers.FirstInit;
 using static ElectronicDepartment.Common.Constants;
+using ElectronicDepartment.Interfaces;
 
 namespace Company.WebApplication1
 {

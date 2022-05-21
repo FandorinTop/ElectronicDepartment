@@ -1,5 +1,6 @@
 ﻿using ElectronicDepartment.DomainEntities;
 using ElectronicDepartment.Web.Shared.User;
+using ElectronicDepartment.Interfaces;
 
 namespace ElectronicDepartment.BusinessLogic
 {
