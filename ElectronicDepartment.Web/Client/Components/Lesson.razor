@@ -8,6 +8,7 @@
 @using ElectronicDepartment.Web.Shared.CourseTeacher.Responce
 @using ElectronicDepartment.Web.Shared.Mark
 @using ElectronicDepartment.Web.Shared.Mark.Responce
+@attribute [Authorize(Roles = "admin, manager, teacher")]
 
 <MatDialog @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle>
@@ -63,7 +64,7 @@
         </div>
 
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-            <EditForm Model="Model" OnValidSubmit="Success">
+            <EditForm Context="con" Model="Model" OnValidSubmit="Success">
                 <DataAnnotationsValidator />
                 <div class="mat-layout-grid">
                     <MatDivider />
@@ -126,7 +127,6 @@
         </div>
     </div>
 </div>
-
 @code {
     MatAutocompleteList<GetStudentSelectViewModel> matAutocomplete = null;
 }

@@ -8,6 +8,7 @@
 @using ElectronicDepartment.Web.Shared.Lesson
 @using ElectronicDepartment.Web.Shared.Lesson.Responce
 @inject NavigationManager NavManager
+@attribute [Authorize(Roles = "admin, teacher, manager")]
 
 <head>
 

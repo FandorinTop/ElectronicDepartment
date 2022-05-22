@@ -20,7 +20,7 @@ namespace ElectronicDepartment.Web.Client.Services
 
             if (jwt is null)
             {
-                var anonymous = new ClaimsIdentity();
+                var anonymous = new ClaimsIdentity("new", "dick", "teacher");
                 state = new AuthenticationState(new ClaimsPrincipal(anonymous));
             }
             else

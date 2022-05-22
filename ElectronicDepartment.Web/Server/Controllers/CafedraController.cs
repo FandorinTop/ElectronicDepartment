@@ -3,6 +3,7 @@ using ElectronicDepartment.Web.Shared.Cafedra;
 using Microsoft.AspNetCore.Mvc;
 using ElectronicDepartment.Interfaces;
 using static ElectronicDepartment.Web.Shared.CafedraController;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicDepartment.Web.Server.Controllers
 {
@@ -18,6 +19,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager, teacher")]
         public async Task<IActionResult> Create(CreateCafedraViewModel viewModel)
         {
             var id = await _cafedraService.Create(viewModel);
@@ -42,6 +44,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin, manager, teacher")]
         public async Task<IActionResult> Update(UpdateCafedraViewModel viewModel)
         {
             await _cafedraService.Update(viewModel);

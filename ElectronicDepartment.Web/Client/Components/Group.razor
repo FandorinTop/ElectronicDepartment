@@ -3,15 +3,16 @@
 @using System.ComponentModel.DataAnnotations
 @using System.IO
 @using System.Net.Http.Headers
+@attribute [Authorize(Roles = "admin, manager")]
 
-<EditForm Model="Model" OnSubmit="Success">
+<EditForm Context="con" Model="Model" OnSubmit="Success">
     <DataAnnotationsValidator />
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
             @Title
         </div>
         <MatDivider />
-        <br/>
+        <br />
         <div class="mat-layout-grid-inner">
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">

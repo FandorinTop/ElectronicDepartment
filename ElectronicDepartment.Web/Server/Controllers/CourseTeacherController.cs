@@ -2,6 +2,7 @@
 using ElectronicDepartment.Web.Shared.CourseTeacher;
 using Microsoft.AspNetCore.Mvc;
 using ElectronicDepartment.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicDepartment.Web.Server.Controllers
 {
@@ -17,6 +18,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager, teacher")]
         public async Task<IActionResult> Create(CreateCourseTeacherViewModel viewModel)
         {
             var id = await _courseTeacherService.Create(viewModel);
@@ -49,6 +51,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin, manager, teacher")]
         public async Task<IActionResult> Update(UpdateCourseTeacherViewModel viewModel)
         {
             await _courseTeacherService.Update(viewModel);

@@ -5,8 +5,9 @@
 @using System.Net.Http.Headers
 @using ElectronicDepartment.Common.Enums
 @using ElectronicDepartment.Web.Shared.Cafedra.Responce
+@attribute [Authorize(Roles = "admin, manager")]
 
-<EditForm Model="Model" OnSubmit="Success">
+<EditForm Context="mod" Model="Model" OnSubmit="Success">
     <DataAnnotationsValidator />
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
@@ -18,7 +19,7 @@
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
                     <p>
-                        <MatDatePicker Label="BirthDay" @bind-Value="Model.BirthDay" FullWidth="true"/>
+                        <MatDatePicker Label="BirthDay" @bind-Value="Model.BirthDay" FullWidth="true" />
                         <ValidationMessage For="@(() => Model.BirthDay)" />
                     </p>
                     <p>
@@ -26,19 +27,19 @@
                         <ValidationMessage For="@(() => Model.Email)" />
                     </p>
                     <p>
-                        <MatTextField Label="FirstName" @bind-Value="Model.FirstName" FullWidth="true"/>
+                        <MatTextField Label="FirstName" @bind-Value="Model.FirstName" FullWidth="true" />
                         <ValidationMessage For="@(() => Model.FirstName)" />
                     </p>
                     <p>
-                        <MatTextField Label="MiddleName" @bind-Value="Model.MiddleName" FullWidth="true"/>
+                        <MatTextField Label="MiddleName" @bind-Value="Model.MiddleName" FullWidth="true" />
                         <ValidationMessage For="@(() => Model.MiddleName)" />
                     </p>
                     <p>
-                        <MatTextField Label="LastName" @bind-Value="Model.LastName" FullWidth="true"/>
+                        <MatTextField Label="LastName" @bind-Value="Model.LastName" FullWidth="true" />
                         <ValidationMessage For="@(() => Model.LastName)" />
                     </p>
                     <p>
-                        <MatTextField Label="PhoneNumber" @bind-Value="Model.PhoneNumber" FullWidth="true"/>
+                        <MatTextField Label="PhoneNumber" @bind-Value="Model.PhoneNumber" FullWidth="true" />
                         <ValidationMessage For="@(() => Model.PhoneNumber)" />
                     </p>
                     <p>

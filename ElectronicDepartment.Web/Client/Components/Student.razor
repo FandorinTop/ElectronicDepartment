@@ -6,6 +6,7 @@
 @using ElectronicDepartment.Common.Enums
 @using ElectronicDepartment.Web.Shared.Cafedra.Responce
 @using ElectronicDepartment.Web.Shared.Group.Responce
+@attribute [Authorize(Roles = "admin, manager")]
 
 <EditForm Model="Model" OnValidSubmit="Success">
     <DataAnnotationsValidator />

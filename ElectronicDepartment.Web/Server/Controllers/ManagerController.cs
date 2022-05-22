@@ -3,6 +3,7 @@ using ElectronicDepartment.Web.Shared.Login;
 using ElectronicDepartment.Web.Shared.User.Manager;
 using ElectronicDepartment.Web.Shared.User.Student;
 using ElectronicDepartment.Web.Shared.User.Teacher;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static ElectronicDepartment.Web.Shared.CafedraController;
 
@@ -20,6 +21,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
+
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
             var responce = await _managerService.Login(loginModel);
@@ -28,6 +31,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, manager")]
         public async Task<IActionResult> GetManager(string id)
         {
             var res = await _managerService.GetManager(id);
@@ -44,6 +48,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, manager")]
         public async Task<IActionResult> GetStudent(string id)
         {
             var res = await _managerService.GetStudent(id);
@@ -52,6 +57,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
         public async Task<IActionResult> CreateStudent(CreateStudentViewModel viewModel)
         {
             var id = await _managerService.CreateStudent(viewModel);
@@ -60,6 +66,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> UpdateStudent(UpdateStudentViewModel viewModel)
         {
             await _managerService.UpdateStudent(viewModel);
@@ -68,6 +76,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> CreateManager(CreateManagerViewModel viewModel)
         {
             var id = await _managerService.CreateManager(viewModel);
@@ -76,6 +86,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> UpdateManager(UpdateManagerViewModel viewModel)
         {
             await _managerService.UpdateManager(viewModel);
@@ -84,6 +96,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> CreateTeacher(CreateTeacherViewModel viewModel)
         {
             var id = await _managerService.CreateTeacher(viewModel);
@@ -92,6 +106,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> UpdateTeacher(UpdateTeacherViewModel viewModel)
         {
             await _managerService.UpdateTeacher(viewModel);
@@ -100,6 +116,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> GetApiStudent(GetApiBodyRequest viewModel)
         {
             var responce = await _managerService.GetApiStudentResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
@@ -108,6 +126,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> GetApiManager(GetApiBodyRequest viewModel)
         {
             var responce = await _managerService.GetApiManagerResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);
@@ -116,6 +136,8 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
+
         public async Task<IActionResult> GetApiTeacher(GetApiBodyRequest viewModel)
         {
             var responce = await _managerService.GetApiTeacherResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);

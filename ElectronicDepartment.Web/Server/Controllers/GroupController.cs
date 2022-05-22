@@ -19,6 +19,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
         public async Task<IActionResult> Create(CreateGroupViewModel viewModel)
         {
             var id = await _groupService.Create(viewModel);
@@ -43,6 +44,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin, manager")]
         public async Task<IActionResult> Update(UpdateGroupViewModel viewModel)
         {
             await _groupService.Update(viewModel);
@@ -51,7 +53,6 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetApiResponce(GetApiBodyRequest viewModel)
         {
             var responce = await _groupService.GetApiResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);

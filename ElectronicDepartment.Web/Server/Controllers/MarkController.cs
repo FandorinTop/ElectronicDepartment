@@ -1,5 +1,6 @@
 ﻿using ElectronicDepartment.BusinessLogic;
 using ElectronicDepartment.Web.Shared.Mark;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static ElectronicDepartment.Web.Shared.CafedraController;
 
@@ -17,6 +18,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager, teacher")]
         public async Task<IActionResult> Create(CreateMarkViewModel viewModel)
         {
             var id = await _markService.Create(viewModel);
@@ -33,6 +35,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin, manager, teacher")]
         public async Task<IActionResult> Update(UpdateMarkViewModel viewModel)
         {
             await _markService.Update(viewModel);

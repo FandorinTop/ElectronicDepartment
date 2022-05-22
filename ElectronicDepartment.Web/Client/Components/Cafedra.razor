@@ -4,6 +4,7 @@
 @using System.IO
 @using System.Net.Http.Headers
 @inject NavigationManager NavManager
+@attribute [Authorize(Roles = "admin, manager")]
 
 <EditForm Model="Model" OnSubmit="Success">
     <DataAnnotationsValidator />
