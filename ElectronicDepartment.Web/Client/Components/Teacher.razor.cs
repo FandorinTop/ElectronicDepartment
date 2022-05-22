@@ -10,6 +10,10 @@ namespace ElectronicDepartment.Web.Client.Components
 {
     public partial class Teacher
     {
+        private bool snackBarIsOpen = false;
+
+        private string ImportantMessage { get; set; }
+
         private string Title { get; set; } = string.Empty;
 
         [Inject]
@@ -83,12 +87,13 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task CreateAsync()
         {
-            var result = await HttpClient.PostAsync(@"api/Manager/CreateTeacher", JsonContent.Create(Model));
+            var result = await HttpClient.PostAsync(@"api/Manager/CreateTeacher", Model);
 
             if (result.IsSuccessStatusCode)
             {
                 var id = await result.Content.ReadAsStringAsync();
                 Id = id;
+                ImportantMessage = "Successful created! with id: '{id}'";
                 await JS.InvokeAsync<object>("alert", $"Successful created! with id: '{id}'");
             }
             else
@@ -113,7 +118,7 @@ namespace ElectronicDepartment.Web.Client.Components
                 PhoneNumber = Model.PhoneNumber,
             };
 
-            var result = await HttpClient.PutAsync(@"api/Manager/UpdateTeacher", JsonContent.Create(updateModel));
+            var result = await HttpClient.PutAsync(@"api/Manager/UpdateTeacher", updateModel);
 
             if (result.IsSuccessStatusCode)
             {

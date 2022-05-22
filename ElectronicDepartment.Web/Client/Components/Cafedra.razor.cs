@@ -11,7 +11,6 @@ namespace ElectronicDepartment.Web.Client.Components
         private string Title { get; set; } = string.Empty;
 
         [Inject]
-
         IHttpService HttpClient { get; set; }
 
         [Inject]

@@ -291,7 +291,7 @@ namespace ElectronicDepartment.Web.Client.Components
                 CourseId = Model.CourseId
             };
 
-            var result = await HttpClient.PutAsync(@"api/Lesson/Update", JsonContent.Create(updateModel));
+            var result = await HttpClient.PutAsync(@"api/Lesson/Update", updateModel);
 
             if (result.IsSuccessStatusCode)
             {

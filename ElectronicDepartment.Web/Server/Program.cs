@@ -87,6 +87,8 @@ namespace Company.WebApplication1
                 app.UseHsts();
             }
 
+            app.ConfigureExceptionHandler(app.Environment, app.Logger);
+
             app.UseHttpsRedirection();
 
             app.UseBlazorFrameworkFiles();
@@ -102,7 +104,9 @@ namespace Company.WebApplication1
             app.MapControllers();
             app.MapFallbackToFile("index.html");
 
-            StartupConfiguration.InitDb(app);
+            InitDb(app);
+
+            
 
             app.Run();
         }
@@ -128,8 +132,9 @@ namespace Company.WebApplication1
                 //Resolve ASP .NET Core Identity with DI help
                 var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
                 var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+                var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
                 InitRoles(roleManager, GetRoles()).GetAwaiter().GetResult();
-                InitAdmin(userManager).GetAwaiter().GetResult();                // do you things here
+                InitStartData(userManager, context).GetAwaiter().GetResult();
             }
         }
 

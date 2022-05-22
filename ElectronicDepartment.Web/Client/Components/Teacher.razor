@@ -78,3 +78,10 @@
         </div>
     </div>
 </EditForm>
+
+<MatSnackbar @bind-IsOpen="@snackBarIsOpen" Stacked="true">
+            <MatSnackbarContent>@ImportantMessage</MatSnackbarContent>
+            <MatSnackbarActions>
+                <MatButton Raised="true" OnClick="@(e => snackBarIsOpen = false)">Ok</MatButton>
+            </MatSnackbarActions>
+        </MatSnackbar>

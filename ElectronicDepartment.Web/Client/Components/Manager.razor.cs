@@ -71,7 +71,7 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task CreateAsync()
         {
-            var result = await HttpClient.PostAsync(@"api/Manager/CreateManager", JsonContent.Create(Model));
+            var result = await HttpClient.PostAsync(@"api/Manager/CreateManager", Model);
 
             if (result.IsSuccessStatusCode)
             {
@@ -99,7 +99,7 @@ namespace ElectronicDepartment.Web.Client.Components
                 PhoneNumber = Model.PhoneNumber,
             };
 
-            var result = await HttpClient.PutAsync(@"api/Manager/UpdateManager", JsonContent.Create(updateModel));
+            var result = await HttpClient.PutAsync(@"api/Manager/UpdateManager", updateModel);
 
             if (result.IsSuccessStatusCode)
             {

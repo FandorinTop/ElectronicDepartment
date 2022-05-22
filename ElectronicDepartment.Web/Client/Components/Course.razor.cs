@@ -274,7 +274,7 @@ namespace ElectronicDepartment.Web.Client.Components
         #region Course
         private async Task CreateAsync()
         {
-            var result = await HttpClient.PostAsync(@"/api/Course/Create", JsonContent.Create(Model));
+            var result = await HttpClient.PostAsync(@"/api/Course/Create", Model);
 
             if (result.IsSuccessStatusCode)
             {
@@ -297,7 +297,7 @@ namespace ElectronicDepartment.Web.Client.Components
                 Name = Model.Name
             };
 
-            var result = await HttpClient.PutAsync(@"/api/Course/Update", JsonContent.Create(updateModel));
+            var result = await HttpClient.PutAsync(@"/api/Course/Update", updateModel);
 
             if (result.IsSuccessStatusCode)
             {

@@ -1,7 +1,7 @@
 ﻿@page "/login"
 @using System.ComponentModel.DataAnnotations
 @using ElectronicDepartment.Web.Client.Helpers
-@using ElectronicDepartment.Web.Client.Services  
+@using ElectronicDepartment.Web.Client.Services
 @inject IAuthenticationService AuthenticationService
 @inject AuthenticationStateProvider TestAuthStateProvider
 @inject NavigationManager NavigationManager
@@ -9,11 +9,21 @@
 
 <div class="col-md-6 offset-md-3 mt-5">
     <div class="alert alert-info">
-        Username: admin123@gmail.com<br />
+        Student
+        Username: Student@gmail.com
+        Password: aStudent123!<br /><br />
+        Manager
+        Username: Manager@gmail.com
+        Password: aManager123!<br /><br />
+        Teacher
+        Username: Teacher@gmail.com
+        Password: aTeacher123!<br /><br />
+        Admin
+        Username: admin123@gmail.com
         Password: admin123!
     </div>
     <div class="card">
-        <h4 class="card-header">Blazor WebAssembly JWT Login Example</h4>
+        <h4 class="card-header">Blazor WebAssembly JWT Login</h4>
         <div class="card-body">
             <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator />
@@ -28,12 +38,14 @@
                     <ValidationMessage For="@(() => model.Password)" />
                 </div>
                 <button class="btn btn-primary">
-                    @if (loading) {
+                    @if (loading)
+                    {
                         <span class="spinner-border spinner-border-sm mr-1"></span>
                     }
                     Login
                 </button>
-                @if (!string.IsNullOrEmpty(error)) {
+                @if (!string.IsNullOrEmpty(error))
+                {
                     <div class="alert alert-danger mt-3 mb-0">@error</div>
                 }
             </EditForm>

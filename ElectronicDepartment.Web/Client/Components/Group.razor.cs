@@ -57,7 +57,7 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task CreateAsync()
         {
-            var result = await HttpClient.PostAsync(@"api/Group/Create", JsonContent.Create(Model));
+            var result = await HttpClient.PostAsync(@"api/Group/Create", Model);
 
             if (result.IsSuccessStatusCode)
             {
@@ -79,7 +79,7 @@ namespace ElectronicDepartment.Web.Client.Components
                 Name = Model.Name
             };
 
-            var result = await HttpClient.PutAsync(@"api/Group/Update", JsonContent.Create(updateModel));
+            var result = await HttpClient.PutAsync(@"api/Group/Update", updateModel);
 
             if (result.IsSuccessStatusCode)
             {
