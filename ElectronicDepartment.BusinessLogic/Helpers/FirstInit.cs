@@ -24,9 +24,6 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
 
         public static async Task InitStartData(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext)
         {
-            await InitGroup(dbContext);
-            await InitCafedra(dbContext);
-            
             await InitManager(userManager);
             await InitAdmin(userManager);
 
@@ -47,7 +44,6 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
                 Gender = Gender.None,
                 UserName = @"Student",
                 EmailConfirmed = true,
-                GroupId = (await dbContext.Groups.FirstOrDefaultAsync()).Id,
                 UserType = UserType.Student,
                 PhoneNumber = "++3777777",
                 PhoneNumberConfirmed = true
@@ -57,17 +53,17 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
 
             if (user is null)
             {
+                await InitGroup(dbContext);
+                student.Group = await dbContext.Groups.FirstOrDefaultAsync();
+
                 var result = await userManager.CreateAsync(student, password);
+            }
 
-                var roles = await userManager.GetRolesAsync(student);
+            var roles = await userManager.GetRolesAsync(student);
 
-                if (roles.Count() < 0)
-                {
-                    if (result.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(user, STUDENTROLE);
-                    }
-                }
+            if (roles.Count() == 0)
+            {
+                await userManager.AddToRoleAsync(student, STUDENTROLE);
             }
         }
 
@@ -94,16 +90,13 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
             if (user is null)
             {
                 var result = await userManager.CreateAsync(manager, password);
+            }
 
-                var roles = await userManager.GetRolesAsync(manager);
+            var roles = await userManager.GetRolesAsync(manager);
 
-                if (roles.Count() < 0)
-                {
-                    if (result.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(user, MANAGERROLE);
-                    }
-                }
+            if (roles.Count() == 0)
+            {
+                await userManager.AddToRoleAsync(manager, MANAGERROLE);
             }
         }
 
@@ -121,7 +114,6 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
                 UserName = @"Teacher",
                 EmailConfirmed = true,
                 UserType = UserType.Teacher,
-                CafedraId = (await dbContext.Cafedras.FirstOrDefaultAsync()).Id,
                 PhoneNumber = "++389999999",
                 PhoneNumberConfirmed = true
             };
@@ -130,17 +122,17 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
 
             if (user is null)
             {
+                await InitCafedra(dbContext);
+                var cafedra = await dbContext.Cafedras.FirstOrDefaultAsync();
+
                 var result = await userManager.CreateAsync(teacher, password);
+            }
 
-                var roles = await userManager.GetRolesAsync(teacher);
+            var roles = await userManager.GetRolesAsync(teacher);
 
-                if (roles.Count() < 0)
-                {
-                    if (result.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(user, TEACHERROLE);
-                    }
-                }
+            if (roles.Count() == 0)
+            {
+                await userManager.AddToRoleAsync(teacher, TEACHERROLE);
             }
         }
 
@@ -167,16 +159,13 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
             if (user is null)
             {
                 var result = await userManager.CreateAsync(admin, password);
+            }
 
-                var roles = await userManager.GetRolesAsync(admin);
+            var roles = await userManager.GetRolesAsync(admin);
 
-                if(roles.Count() < 0)
-                {
-                    if (result.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(user, ADMINROLE);
-                    }
-                }
+            if (roles.Count() == 0)
+            {
+                await userManager.AddToRoleAsync(admin, ADMINROLE);
             }
         }
 
@@ -187,13 +176,8 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
                 Name = "PP-22-ZZ",
             };
 
-            var group2 = new Group()
-            {
-                Name = "DD-A22-KK",
-            };
 
             await dbContext.Groups.AddAsync(group1);
-            await dbContext.Groups.AddAsync(group2);
 
             await dbContext.SaveChangesAsync();
         }
@@ -204,20 +188,10 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
             {
                 Name = "Botanica",
                 Description = "Cafedra Botanici",
-                NormalizedName = "BOTANICA",
-                Phone = "+3809944622",
-            };
-
-            var cafedra2 = new Cafedra()
-            {
-                Name = "IT",
-                Description = "Cafedra IT",
-                NormalizedName = "IT",
                 Phone = "+3809944622",
             };
 
             await dbContext.Cafedras.AddAsync(cafedra1);
-            await dbContext.Cafedras.AddAsync(cafedra2);
 
             await dbContext.SaveChangesAsync();
         }

@@ -11,7 +11,7 @@ namespace ElectronicDepartment.Web.Shared.User.Teacher
     public class BaseTeacherViewModel : BaseUserViewModel
     {
         [Required]
-        public int CafedraId { get; set; }
+        public int? CafedraId { get; set; }
 
         public AcademicAcredition AcademicAcredition { get; set; } = AcademicAcredition.None;
     }

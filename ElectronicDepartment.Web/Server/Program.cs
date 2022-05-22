@@ -133,8 +133,18 @@ namespace Company.WebApplication1
                 var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
                 var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
                 var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+
+                context.Database.EnsureCreated();
+
                 InitRoles(roleManager, GetRoles()).GetAwaiter().GetResult();
                 InitStartData(userManager, context).GetAwaiter().GetResult();
+            }
+            using (var scope = app.Services.CreateScope())
+            {
+                //Resolve ASP .NET Core Identity with DI help
+                var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+                var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
             }
         }
 

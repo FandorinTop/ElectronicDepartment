@@ -138,12 +138,8 @@ namespace ElectronicDepartment.BusinessLogic
             var user = await _userManager.FindByEmailAsync(login.Email);
             DbNullReferenceException.ThrowExceptionIfNull(user, nameof(login.Email), login.Email);
 
-            var result = await _passwordValidator.ValidateAsync(_userManager, user, login.Password);
-
             var userRole = await _context.UserRoles.FirstOrDefaultAsync(item => item.UserId == user.Id);
             var role = await _context.Roles.FirstOrDefaultAsync(item => item.Id == userRole.RoleId);
-
-
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, login.Email), new Claim(ClaimTypes.Role, role.Name) };
 
             var jwt = new JwtSecurityToken(
@@ -154,6 +150,8 @@ namespace ElectronicDepartment.BusinessLogic
                     expires: DateTime.Now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            var result = await _passwordValidator.ValidateAsync(_userManager, user, login.Password);
 
             if (result.Succeeded)
             {
