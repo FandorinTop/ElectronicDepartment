@@ -12,9 +12,11 @@
     </div>
     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8">
     </div>
-    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
-        <MatButton OnClick="@(item => NavManager.NavigateTo($"/manage/Group/"))" Icon="create_new_folder" style="display: flex; justify-content: flex-end">Add</MatButton>
-    </div>
+    <AuthorizeView Roles="admin, manager">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
+            <MatButton OnClick="@(item => NavManager.NavigateTo($"/manage/Group/"))" Icon="create_new_folder" style="display: flex; justify-content: flex-end">Add</MatButton>
+        </div>
+    </AuthorizeView>
 </div>
 
 

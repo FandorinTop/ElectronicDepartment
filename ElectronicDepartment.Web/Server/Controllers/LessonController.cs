@@ -61,6 +61,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+
         public async Task<IActionResult> GetApiResponce(GetApiBodyRequest viewModel)
         {
             var responce = await _lessonService.GetApiLessonResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);

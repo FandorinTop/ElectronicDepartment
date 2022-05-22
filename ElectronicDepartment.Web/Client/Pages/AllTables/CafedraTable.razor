@@ -15,9 +15,11 @@
     </div>
     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8">
     </div>
+    <AuthorizeView Roles="teacher, admin, manager">
     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
         <MatButton OnClick="@(item => NavigationManager.NavigateTo($"/manage/Cafedra/"))" Icon="create_new_folder" style="display: flex; justify-content: flex-end">Add</MatButton>
     </div>
+    </AuthorizeView>
 </div>
 
 <MatTable Items="ApiResult.Data"
