@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ElectronicDepartment.Web.Shared.Login;
+using Microsoft.AspNetCore.Components;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -7,12 +8,15 @@ using System.Text.Json;
 
 namespace ElectronicDepartment.Web.Client.Services
 {
-    
-
     public interface IHttpService
     {
-        Task<T> Get<T>(string uri);
-        Task<T> Post<T>(string uri, object value);
+        Task<HttpResponseMessage> GetAsync(string uri);
+
+        Task<HttpResponseMessage> PostAsync(string uri, object value);
+
+        Task<HttpResponseMessage> PutAsync(string uri, object value);
+
+        Task<HttpResponseMessage> DeleteAsync(string uri);
     }
 
     public class HttpService : IHttpService
@@ -35,30 +39,43 @@ namespace ElectronicDepartment.Web.Client.Services
             _configuration = configuration;
         }
 
-        public async Task<T> Get<T>(string uri)
+        public async Task<HttpResponseMessage> DeleteAsync(string uri)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            return await sendRequest<T>(request);
+            var request = new HttpRequestMessage(HttpMethod.Delete, uri);
+            return await sendRequest(request);
         }
 
-        public async Task<T> Post<T>(string uri, object value)
+        public async Task<HttpResponseMessage> GetAsync(string uri)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            return await sendRequest(request);
+        }
+
+        public async Task<HttpResponseMessage> PostAsync(string uri, object value)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
-            return await sendRequest<T>(request);
+            return await sendRequest(request);
+        }
+
+        public async Task<HttpResponseMessage> PutAsync(string uri, object value)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, uri);
+            request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
+            return await sendRequest(request);
         }
 
         // helper methods
 
-        private async Task<T> sendRequest<T>(HttpRequestMessage request)
+        private async Task<HttpResponseMessage> sendRequest(HttpRequestMessage request)
         {
             // add jwt auth header if user is logged in and request is to the api url
-            var user = await _localStorageService.GetItem<User>("user");
+            var user = await _localStorageService.GetItem<LoginResult>("user");
             var isApiUrl = !request.RequestUri.IsAbsoluteUri;
             if (user != null && isApiUrl)
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.JWTBearer);
 
-            using var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             // auto logout on 401 response
             if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -74,7 +91,7 @@ namespace ElectronicDepartment.Web.Client.Services
                 throw new Exception(error["message"]);
             }
 
-            return await response.Content.ReadFromJsonAsync<T>();
+            return response;
         }
     }
 }

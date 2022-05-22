@@ -1,6 +1,7 @@
 ﻿using ElectronicDepartment.BusinessLogic;
 using ElectronicDepartment.Interfaces;
 using ElectronicDepartment.Web.Shared.Group;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static ElectronicDepartment.Web.Shared.CafedraController;
 
@@ -50,6 +51,7 @@ namespace ElectronicDepartment.Web.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetApiResponce(GetApiBodyRequest viewModel)
         {
             var responce = await _groupService.GetApiResponce(viewModel.PageIndex, viewModel.PageSize, viewModel.SortingRequests, viewModel.FilterRequests);

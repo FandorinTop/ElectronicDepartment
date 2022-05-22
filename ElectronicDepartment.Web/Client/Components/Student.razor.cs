@@ -1,4 +1,5 @@
 ﻿using ElectronicDepartment.Common.Enums;
+using ElectronicDepartment.Web.Client.Services;
 using ElectronicDepartment.Web.Shared.Group.Responce;
 using ElectronicDepartment.Web.Shared.User.Student;
 using ElectronicDepartment.Web.Shared.User.Student.Responce;
@@ -13,7 +14,7 @@ namespace ElectronicDepartment.Web.Client.Components
         private string Title { get; set; } = string.Empty;
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        IHttpService HttpClient { get; set; }
 
         public Gender[] Genders = new[]
         {
@@ -61,7 +62,8 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (!string.IsNullOrEmpty(Id))
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseStudentViewModel>($"api/Manager/GetStudent?id={Id}");
+                var responce = await HttpClient.GetAsync($"api/Manager/GetStudent?id={Id}");
+                var result = await responce.Content.ReadFromJsonAsync<BaseStudentViewModel>();
 
                 Console.WriteLine("getResult: " + result);
 
@@ -114,7 +116,8 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task GetGroupSelector()
         {
-            var result = await HttpClient.GetFromJsonAsync<IEnumerable<GetGroupSelectorViewModel>>($"api/Group/GetSelector");
+            var responce = await HttpClient.GetAsync($"api/Group/GetSelector");
+            var result = await responce.Content.ReadFromJsonAsync<IEnumerable<GetGroupSelectorViewModel>>();
 
             if (result.Any())
             {

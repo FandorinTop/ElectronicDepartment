@@ -1,4 +1,5 @@
 ﻿@page "/Courses"
+@using ElectronicDepartment.Web.Client.Services
 @using ElectronicDepartment.Web.Shared
 @using ElectronicDepartment.Web.Shared.Common
 @using ElectronicDepartment.Web.Shared.Course.Responce
@@ -44,8 +45,7 @@
     MatPaginator matTablePagenator { get; set; } = null;
 
     [Inject]
-    HttpClient HttpClient { get; set; }
-
+    IHttpService HttpClient { get; set; }
 
     public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
         {
@@ -57,7 +57,7 @@
 
     public async Task GetData()
     {
-        var result = await HttpClient.PostAsJsonAsync("api/Course/GetApiResponce", Pagenator);
+        var result = await HttpClient.PostAsync("api/Course/GetApiResponce", Pagenator);
 
         if (result.IsSuccessStatusCode)
         {

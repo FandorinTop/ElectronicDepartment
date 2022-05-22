@@ -44,9 +44,14 @@ namespace ElectronicDepartment.BusinessLogic.Helpers
             {
                 var result = await userManager.CreateAsync(admin, password);
 
-                if (result.Succeeded)
+                var roles = await userManager.GetRolesAsync(admin);
+
+                if(roles.Count() < 0)
                 {
-                    await userManager.AddToRoleAsync(user, ADMINROLE);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, ADMINROLE);
+                    }
                 }
             }
         }

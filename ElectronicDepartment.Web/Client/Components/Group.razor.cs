@@ -1,4 +1,5 @@
-﻿using ElectronicDepartment.Web.Shared.Group;
+﻿using ElectronicDepartment.Web.Client.Services;
+using ElectronicDepartment.Web.Shared.Group;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
@@ -11,7 +12,7 @@ namespace ElectronicDepartment.Web.Client.Components
         private string Title { get; set; } = string.Empty;
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        IHttpService HttpClient { get; set; }
 
         [Inject]
         IJSRuntime JS { get; set; }
@@ -45,7 +46,8 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (Id != default)
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseGroupViewModel>($"api/Group/Get?id={Id}");
+                var responce = await HttpClient.GetAsync($"api/Group/Get?id={Id}");
+                var result = await responce.Content.ReadFromJsonAsync<BaseGroupViewModel>();
 
                 Console.WriteLine("getResult: " + result);
 

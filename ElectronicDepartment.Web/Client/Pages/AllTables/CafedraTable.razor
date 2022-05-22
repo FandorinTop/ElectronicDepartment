@@ -1,5 +1,6 @@
 ﻿@page "/Cafedras"
 
+@using ElectronicDepartment.Web.Client.Services
 @using ElectronicDepartment.Web.Shared
 @using ElectronicDepartment.Web.Shared.Cafedra.Responce
 @using ElectronicDepartment.Web.Shared.Common
@@ -46,7 +47,7 @@
     MatPaginator matTablePagenator { get; set; } = null;
 
     [Inject]
-    HttpClient HttpClient { get; set; }
+    IHttpService HttpClient { get; set; }
 
 
     public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
@@ -59,7 +60,7 @@
 
     public async Task GetData()
     {
-        var result = await HttpClient.PostAsJsonAsync("api/Cafedra/GetApiResponce", Pagenator);
+        var result = await HttpClient.PostAsync("api/Cafedra/GetApiResponce", Pagenator);
 
         if (result.IsSuccessStatusCode)
         {

@@ -1,5 +1,6 @@
 ﻿using ElectronicDepartment.Web.Shared;
 using ElectronicDepartment.Web.Shared.Common;
+using ElectronicDepartment.Web.Shared.Login;
 using ElectronicDepartment.Web.Shared.User.Manager;
 using ElectronicDepartment.Web.Shared.User.Manager.Responce;
 using ElectronicDepartment.Web.Shared.User.Student;
@@ -11,6 +12,8 @@ namespace ElectronicDepartment.BusinessLogic
 {
     public interface IUserManagerService
     {
+        public Task<LoginResult> Login(LoginModel login);
+
         public Task UpdatePassword(string userId, string password, string newPassword);
 
         public Task UpdatePassword(string userId, string newPassword);

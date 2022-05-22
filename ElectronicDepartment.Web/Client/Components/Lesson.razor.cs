@@ -1,4 +1,5 @@
 ﻿using ElectronicDepartment.Common.Enums;
+using ElectronicDepartment.Web.Client.Services;
 using ElectronicDepartment.Web.Shared.Course.Responce;
 using ElectronicDepartment.Web.Shared.CourseTeacher.Responce;
 using ElectronicDepartment.Web.Shared.Group.Responce;
@@ -29,7 +30,7 @@ namespace ElectronicDepartment.Web.Client.Components
         private string Title { get; set; } = string.Empty;
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        IHttpService HttpClient { get; set; }
 
         [Inject]
         IJSRuntime JS { get; set; }
@@ -155,7 +156,9 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (Id != null)
             {
-                var result = await HttpClient.GetFromJsonAsync<UpdateLessonViewModel>($"api/Lesson/Get?id={Id}");
+                var responce = await HttpClient.GetAsync($"api/Lesson/Get?id={Id}");
+                var result = await responce.Content.ReadFromJsonAsync<UpdateLessonViewModel>();
+
                 await GetStudentAsync();
                 await GetStudentOnLesson();
                 Console.WriteLine("getResult: " + result);
@@ -166,9 +169,10 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task GetStudentAsync()
         {
-            var studentValue = await HttpClient.GetFromJsonAsync<IEnumerable<GetStudentSelectViewModel>>($"api/Mark/GetStudentLesson");
+            var responce = await HttpClient.GetAsync($"api/Mark/GetStudentLesson");
+            var studentValue = await responce.Content.ReadFromJsonAsync<IEnumerable<GetStudentSelectViewModel>>();
 
-            if(studentValue != null)
+            if (studentValue != null)
             {
                 var removed = studentValue
                     .Where(item => !item.LessonIds.Contains(Id.Value))
@@ -180,7 +184,8 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task GetStudentOnLesson()
         {
-            var studentValue = await HttpClient.GetFromJsonAsync<List<GetStudentOnTheLessonViewModel>>($"api/mark/GetStudentOnLesson?id={Id}");
+            var responce = await HttpClient.GetAsync($"api/mark/GetStudentOnLesson?id={Id}");
+            var studentValue = await responce.Content.ReadFromJsonAsync<List<GetStudentOnTheLessonViewModel>>();
 
             StudentInLessons = studentValue ?? new List<GetStudentOnTheLessonViewModel>();
         }
@@ -189,7 +194,7 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task UpdateStudentOnLessonAsync(UpdateMarkViewModel addViewModel)
         {
-            var result = await HttpClient.PutAsJsonAsync(@"api/mark/update", addViewModel);
+            var result = await HttpClient.PutAsync(@"api/mark/update", addViewModel);
 
             if (result.IsSuccessStatusCode)
             {
@@ -204,7 +209,7 @@ namespace ElectronicDepartment.Web.Client.Components
         private async Task AddStudentOnLessonAsync(UpdateMarkViewModel addViewModel)
         {
             addViewModel.LessonId = Id.Value;
-            var result = await HttpClient.PostAsJsonAsync(@"api/mark/create", addViewModel);
+            var result = await HttpClient.PostAsync(@"api/mark/create", addViewModel);
 
             if (result.IsSuccessStatusCode)
             {

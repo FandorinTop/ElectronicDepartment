@@ -1,4 +1,5 @@
 ﻿using ElectronicDepartment.Common.Enums;
+using ElectronicDepartment.Web.Client.Services;
 using ElectronicDepartment.Web.Shared.Cafedra.Responce;
 using ElectronicDepartment.Web.Shared.User.Teacher;
 using Microsoft.AspNetCore.Components;
@@ -12,7 +13,8 @@ namespace ElectronicDepartment.Web.Client.Components
         private string Title { get; set; } = string.Empty;
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        IHttpService HttpClient { get; set; }
+
 
         public Gender[] Genders = new[]
         {
@@ -70,7 +72,8 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (!string.IsNullOrEmpty(Id))
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseTeacherViewModel>($"api/Manager/GetTeacher?id={Id}");
+                var responce = await HttpClient.GetAsync($"api/Manager/GetTeacher?id={Id}");
+                var result = await responce.Content.ReadFromJsonAsync<BaseTeacherViewModel>();
 
                 Console.WriteLine("getResult: " + result);
 
@@ -124,7 +127,8 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task GetCafedraSelector()
         {
-            var result = await HttpClient.GetFromJsonAsync<IEnumerable<GetCafedraSelectorViewModel>>($"api/Cafedra/GetSelector");
+            var responce = await HttpClient.GetAsync($"api/Cafedra/GetSelector");
+            var result = await responce.Content.ReadFromJsonAsync<IEnumerable<GetCafedraSelectorViewModel>>();
 
             if (result.Any())
             {

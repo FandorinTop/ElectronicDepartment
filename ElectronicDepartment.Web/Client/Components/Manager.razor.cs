@@ -1,4 +1,5 @@
 ﻿using ElectronicDepartment.Common.Enums;
+using ElectronicDepartment.Web.Client.Services;
 using ElectronicDepartment.Web.Shared.Group.Responce;
 using ElectronicDepartment.Web.Shared.User.Manager;
 using ElectronicDepartment.Web.Shared.User.Manager.Responce;
@@ -13,7 +14,7 @@ namespace ElectronicDepartment.Web.Client.Components
         private string Title { get; set; } = string.Empty;
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        IHttpService HttpClient { get; set; }
 
         public Gender[] Genders = new[]
         {
@@ -59,7 +60,8 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (!string.IsNullOrEmpty(Id))
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseManagerViewModel>($"api/Manager/GetManager?id={Id}");
+                var responce = await HttpClient.GetAsync($"api/Manager/GetManager?id={Id}");
+                var result = await responce.Content.ReadFromJsonAsync<BaseManagerViewModel>();
 
                 Console.WriteLine("getResult: " + result);
 

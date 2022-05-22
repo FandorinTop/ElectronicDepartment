@@ -1,4 +1,5 @@
-﻿using ElectronicDepartment.Web.Shared.Cafedra;
+﻿using ElectronicDepartment.Web.Client.Services;
+using ElectronicDepartment.Web.Shared.Cafedra;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Net.Http.Json;
@@ -10,7 +11,8 @@ namespace ElectronicDepartment.Web.Client.Components
         private string Title { get; set; } = string.Empty;
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+
+        IHttpService HttpClient { get; set; }
 
         [Inject]
         IJSRuntime JS { get; set; }
@@ -45,17 +47,17 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (Id != default)
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseCafedraViewModel>($"/api/Cafedra/Get?id={Id}");
+                var result = await HttpClient.GetAsync($"/api/Cafedra/Get?id={Id}");
 
                 Console.WriteLine("getResult: " + result);
 
-                Model = result ?? Model;
+                Model = (await result.Content.ReadFromJsonAsync<BaseCafedraViewModel>()) ?? Model;
             }
         }
 
         private async Task CreateAsync()
         {
-            var result = await HttpClient.PostAsync(@"/api/Cafedra/Create", JsonContent.Create(Model));
+            var result = await HttpClient.PostAsync(@"/api/Cafedra/Create", Model);
 
             if (result.IsSuccessStatusCode)
             {
@@ -80,7 +82,7 @@ namespace ElectronicDepartment.Web.Client.Components
                 Name = Model.Name
             };
 
-            var result = await HttpClient.PutAsync(@"/api/Cafedra/Update", JsonContent.Create(updateModel));
+            var result = await HttpClient.PutAsync(@"/api/Cafedra/Update", updateModel);
 
             if (result.IsSuccessStatusCode)
             {

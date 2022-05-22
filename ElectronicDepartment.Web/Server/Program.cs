@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using static ElectronicDepartment.BusinessLogic.Helpers.FirstInit;
 using static ElectronicDepartment.Common.Constants;
 using ElectronicDepartment.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using static Company.WebApplication1.StartupConfiguration;
 
 namespace Company.WebApplication1
 {
@@ -31,6 +35,29 @@ namespace Company.WebApplication1
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // указывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+                        // строка, представляющая издателя
+                        ValidIssuer = AuthOptions.ISSUER,
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+                        // установка потребителя токена
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
+                        // установка ключа безопасности
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        // валидация ключа безопасности
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
+
             builder.Services.AddInjection();
             // Add services to the container.
 
@@ -38,7 +65,7 @@ namespace Company.WebApplication1
             builder.Services.AddRazorPages();
 
             builder.Services.AddSwaggerGen();
-            
+
 
             var app = builder.Build();
 
@@ -65,10 +92,10 @@ namespace Company.WebApplication1
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
+            app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseRouting();
 
             app.MapRazorPages();
             app.MapDefaultControllerRoute();
@@ -104,8 +131,6 @@ namespace Company.WebApplication1
                 InitRoles(roleManager, GetRoles()).GetAwaiter().GetResult();
                 InitAdmin(userManager).GetAwaiter().GetResult();                // do you things here
             }
-
-            
         }
 
     }

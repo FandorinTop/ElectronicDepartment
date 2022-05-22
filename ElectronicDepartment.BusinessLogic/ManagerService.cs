@@ -16,6 +16,9 @@ using ElectronicDepartment.Web.Shared;
 using ElectronicDepartment.Web.Shared.User.Teacher.Responce;
 using ElectronicDepartment.Web.Shared.User.Manager.Responce;
 using ElectronicDepartment.Web.Shared.Login;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace ElectronicDepartment.BusinessLogic
 {
@@ -130,9 +133,43 @@ namespace ElectronicDepartment.BusinessLogic
             throw new Exception(result.Errors.Select(item => item.Description).Aggregate("", (res, item) => res += item));
         }
 
-        public async Task<LoginResult> Login(LoginResult login)
+        public async Task<LoginResult> Login(LoginModel login)
         {
-            var 
+            var user = await _userManager.FindByEmailAsync(login.Email);
+            DbNullReferenceException.ThrowExceptionIfNull(user, nameof(login.Email), login.Email);
+
+            var result = await _passwordValidator.ValidateAsync(_userManager, user, login.Password);
+
+            var userRole = await _context.UserRoles.FirstOrDefaultAsync(item => item.UserId == user.Id);
+            var role = await _context.Roles.FirstOrDefaultAsync(item => item.Id == userRole.RoleId);
+
+
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, login.Email), new Claim(ClaimTypes.Role, role.Name) };
+
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    notBefore: DateTime.Now,
+                    claims: claims,
+                    expires: DateTime.Now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            if (result.Succeeded)
+            {
+                var loginResult = new LoginResult()
+                {
+                    Email = login.Email,
+                    Message = "",
+                    Success = true,
+                    Role = role.Name,
+                    JWTBearer = encodedJwt
+                };
+
+                return loginResult;
+            }
+
+            throw new Exception(result.Errors.FirstOrDefault().Description);
         }
     }
 

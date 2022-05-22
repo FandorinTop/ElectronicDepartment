@@ -1,4 +1,5 @@
 ﻿using ElectronicDepartment.BusinessLogic;
+using ElectronicDepartment.Web.Shared.Login;
 using ElectronicDepartment.Web.Shared.User.Manager;
 using ElectronicDepartment.Web.Shared.User.Student;
 using ElectronicDepartment.Web.Shared.User.Teacher;
@@ -16,6 +17,14 @@ namespace ElectronicDepartment.Web.Server.Controllers
         public ManagerController(IUserManagerService ManagerService)
         {
             _managerService = ManagerService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginModel loginModel)
+        {
+            var responce = await _managerService.Login(loginModel);
+
+            return Ok(responce);
         }
 
         [HttpGet]

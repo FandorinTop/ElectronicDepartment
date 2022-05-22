@@ -1,5 +1,6 @@
 ﻿@page "/Managers"
 
+@using ElectronicDepartment.Web.Client.Services
 @using ElectronicDepartment.Web.Shared
 @using ElectronicDepartment.Web.Shared.User.Manager.Responce
 @using ElectronicDepartment.Web.Shared.Common
@@ -52,7 +53,8 @@
     MatPaginator matTablePagenator { get; set; } = null;
 
     [Inject]
-    HttpClient HttpClient { get; set; }
+    
+    IHttpService HttpClient { get; set; }
 
 
     public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
@@ -65,7 +67,7 @@
 
     public async Task GetData()
     {
-        var result = await HttpClient.PostAsJsonAsync("api/manager/GetApiManager", Pagenator);
+        var result = await HttpClient.PostAsync("api/manager/GetApiManager", Pagenator);
 
         if (result.IsSuccessStatusCode)
         {

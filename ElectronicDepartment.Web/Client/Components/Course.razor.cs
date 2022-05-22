@@ -8,6 +8,7 @@ using MatBlazor;
 using ElectronicDepartment.Web.Shared.Lesson.Responce;
 using ElectronicDepartment.Web.Shared.Lesson;
 using ElectronicDepartment.Common.Enums;
+using ElectronicDepartment.Web.Client.Services;
 
 namespace ElectronicDepartment.Web.Client.Components
 {
@@ -35,7 +36,7 @@ namespace ElectronicDepartment.Web.Client.Components
         };
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        IHttpService HttpClient { get; set; }
 
         [Inject]
         IJSRuntime JS { get; set; }
@@ -138,7 +139,7 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             lesson.CourseId = Id.Value;
 
-            var responce = await HttpClient.PutAsJsonAsync(@"api/lesson/update", lesson);
+            var responce = await HttpClient.PutAsync(@"api/lesson/update", lesson);
 
             if (responce.IsSuccessStatusCode)
             {
@@ -167,10 +168,7 @@ namespace ElectronicDepartment.Web.Client.Components
 
             try
             {
-                var responce = await HttpClient.PostAsJsonAsync(@"api/lesson/create", Model);
-
-                var temp = HttpClient.BaseAddress + @"api/lesson/create";
-
+                var responce = await HttpClient.PostAsync(@"api/lesson/create", Model);
                 var context = await responce.Content.ReadAsStringAsync();
 
                 if (responce.IsSuccessStatusCode)
@@ -184,7 +182,7 @@ namespace ElectronicDepartment.Web.Client.Components
             }
             catch (Exception ex)
             {
-                
+
             }
 
 
@@ -264,7 +262,8 @@ namespace ElectronicDepartment.Web.Client.Components
         {
             if (Id != null)
             {
-                var result = await HttpClient.GetFromJsonAsync<BaseCourseViewModel>($"/api/Course/Get?id={Id}");
+                var responce = await HttpClient.GetAsync($"/api/Course/Get?id={Id}");
+                var result = await responce.Content.ReadFromJsonAsync<BaseCourseViewModel>();
                 await LoadLessons();
                 Console.WriteLine("getResult: " + result);
 
@@ -320,16 +319,20 @@ namespace ElectronicDepartment.Web.Client.Components
 
         private async Task LoadTeahers()
         {
-            var teachers = await HttpClient.GetFromJsonAsync<IEnumerable<GetCourseTeacherSelectorViewModel>>(@"api/CourseTeacher/GetSelector");
+            var responce = await HttpClient.GetAsync(@"api/CourseTeacher/GetSelector");
+
+            var teachers = await responce.Content.ReadFromJsonAsync<IEnumerable<GetCourseTeacherSelectorViewModel>>();
 
             Teachers = teachers.ToList();
         }
 
         private async Task LoadLessons()
         {
-            var lessons = await HttpClient.GetFromJsonAsync<IEnumerable<GetCourseLessonViewModel>>(@$"api/Lesson/GetCourseLesson?courseId={Id.Value}");
+            var responce = await HttpClient.GetAsync(@$"api/Lesson/GetCourseLesson?courseId={Id.Value}");
 
-            Lessons = lessons.ToList();
+            var lessonse = await responce.Content.ReadFromJsonAsync<IEnumerable<GetCourseLessonViewModel>>();
+
+            Lessons = lessonse.ToList();
         }
     }
 }
