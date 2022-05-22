@@ -1,10 +1,12 @@
 ﻿@page "/logout"
 @using ElectronicDepartment.Web.Client.Services
 @inject IAuthenticationService AuthenticationService
+@inject AuthenticationStateProvider TestAuthStateProvider
 
 @code {
     protected override async void OnInitialized()
     {
         await AuthenticationService.Logout();
+        await TestAuthStateProvider.GetAuthenticationStateAsync();
     }
 }

@@ -1,9 +1,11 @@
-﻿@page "/authentication/login"
+﻿@page "/login"
 @using System.ComponentModel.DataAnnotations
 @using ElectronicDepartment.Web.Client.Helpers
-@using ElectronicDepartment.Web.Client.Services
+@using ElectronicDepartment.Web.Client.Services  
 @inject IAuthenticationService AuthenticationService
+@inject AuthenticationStateProvider TestAuthStateProvider
 @inject NavigationManager NavigationManager
+@attribute [AllowAnonymous]
 
 <div class="col-md-6 offset-md-3 mt-5">
     <div class="alert alert-info">
@@ -44,21 +46,13 @@
     private bool loading;
     private string error;
 
-    protected override void OnInitialized()
-    {
-        // redirect to home if already logged in
-        if (AuthenticationService.User != null)
-        {
-            NavigationManager.NavigateTo("");
-        }
-    }
-
     private async void HandleValidSubmit()
     {
         loading = true;
         try
         {
             await AuthenticationService.Login(model.Username, model.Password);
+            await TestAuthStateProvider.GetAuthenticationStateAsync();
             var returnUrl = NavigationManager.QueryString("returnUrl") ?? "";
             NavigationManager.NavigateTo(returnUrl);
         }

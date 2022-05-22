@@ -40,8 +40,6 @@ namespace ElectronicDepartment.Web.Client.Services
         public async Task Initialize()
         {
             User = await _localStorageService.GetItem<LoginResult>("user");
-
-            var t = "";
         }
 
         public async Task Login(string username, string password)
@@ -55,12 +53,14 @@ namespace ElectronicDepartment.Web.Client.Services
             var responce = await _httpService.PostAsync("api/manager/login", loginModel);
             User =  await responce.Content.ReadFromJsonAsync<LoginResult>();
             await _localStorageService.SetItem("user", User);
+            await _localStorageService.SetItem("jwt", User.JWTBearer);
         }
 
         public async Task Logout()
         {
             User = null;
             await _localStorageService.RemoveItem("user");
+            await _localStorageService.RemoveItem("jwt");
             _navigationManager.NavigateTo("login");
         }
     }
