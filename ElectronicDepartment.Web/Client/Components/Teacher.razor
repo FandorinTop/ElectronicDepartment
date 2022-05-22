@@ -43,7 +43,7 @@
                         <ValidationMessage For="@(() => Model.PhoneNumber)" />
                     </p>
                     <p>
-                        <MatSelectValue Label="Genders" @bind-Value="@Model.AcademicAcredition" Items="@AcademicAcreditions" ValueSelector="@(item1 => item1)" FullWidth="true">
+                        <MatSelectValue Label="AcademicAcreditions" @bind-Value="@Model.AcademicAcredition" Items="@AcademicAcreditions" ValueSelector="@(item1 => item1)" FullWidth="true">
                         </MatSelectValue>
                         <ValidationMessage For="@(() => Model.AcademicAcredition)" />
                     </p>
