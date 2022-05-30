@@ -6,7 +6,7 @@
 @inject NavigationManager NavManager
 @attribute [Authorize(Roles = "admin, manager")]
 
-<EditForm Model="Model" OnSubmit="Success">
+<EditForm Model="Model" OnValidSubmit="Success">
     <DataAnnotationsValidator />
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">

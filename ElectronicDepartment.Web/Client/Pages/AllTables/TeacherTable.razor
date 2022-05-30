@@ -17,15 +17,20 @@
         <MatButton OnClick="@(item => NavManager.NavigateTo($"/manage/teacher/"))" Icon="create_new_folder" style="display: flex; justify-content: flex-end">Add</MatButton>
     </div>
 </div>
+<div>
+    <p>
+        <MatStringField Label="@FilterColumn" @oninput="@(async (ChangeEventArgs e) => await SerchingFieldChange(e.Value.ToString()))"></MatStringField>
+    </p>
+</div>
 
 <MatTable Items="ApiResult.Data"
           class="mat-elevation-z5"
           UseSortHeaderRow="true"
-          ShowPaging="true"
-          FilterByColumnName="FirstName">
+          ShowPaging="false"
+          @bind-PageSize="@Pagenator.PageSize">
     <MatTableHeader>
         <MatSortHeaderRow SortChanged="@SortData">
-            <MatSortHeader SortId="no">Action</MatSortHeader>
+            <th>Action</th>
             <MatSortHeader SortId="FirstName">FirstName</MatSortHeader>
             <MatSortHeader SortId="MiddleName">MiddleName</MatSortHeader>
             <MatSortHeader SortId="LastName">LastName</MatSortHeader>
@@ -50,9 +55,13 @@
         <td>@context.Gender</td>
     </MatTableRow>
 </MatTable>
+<MatPaginator Page="OnPage" @ref="matTablePagenator" @bind-Length="ApiResult.TotalCount">
+
+</MatPaginator>
 
 @code {
     MatPaginator matTablePagenator { get; set; } = null;
+    private const string FilterColumn = nameof(GetTeacherViewModel.LastName);
 
     [Inject]
 
@@ -106,6 +115,31 @@
             await GetData();
         }
     }
+
+    
+    private async Task OnPage(MatPaginatorPageEvent e)
+    {
+        Pagenator.PageIndex = e.PageIndex;
+        Pagenator.PageSize = e.PageSize;
+        await GetData();
+    }
+
+    private async Task SerchingFieldChange(string value)
+    {
+        Pagenator.FilterRequests = new List<FilterRequest>()
+        {
+            new FilterRequest()
+            {
+                FilterColumn = FilterColumn,
+                FilterQuery = value,
+                IsPartFilter = true
+            }
+        };
+
+        await GetData();
+    }
+
+
 
     protected override async Task OnInitializedAsync()
     {

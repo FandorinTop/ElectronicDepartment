@@ -18,19 +18,23 @@
         </div>
     </AuthorizeView>
 </div>
-
+<div>
+    <p>
+        <MatStringField Label="@FilterColumn" @oninput="@(async (ChangeEventArgs e) => await SerchingFieldChange(e.Value.ToString()))"></MatStringField>
+    </p>
+</div>
 
 <MatTable Items="ApiResult.Data"
           class="mat-elevation-z5"
           UseSortHeaderRow="true"
-          ShowPaging="true"
-          FilterByColumnName="Name">
+          ShowPaging="false"
+          @bind-PageSize="@Pagenator.PageSize">
     <MatTableHeader>
         <MatSortHeaderRow SortChanged="@SortData">
-            <MatSortHeader SortId="no">Action</MatSortHeader>
+            <th>Action</th>
             <MatSortHeader SortId="Name">Name</MatSortHeader>
             <MatSortHeader SortId="CreatedAt">CreatedAt</MatSortHeader>
-            <MatSortHeader SortId="StudentCount">StudentCount</MatSortHeader>
+            <th>StudentCount</th>
         </MatSortHeaderRow>
     </MatTableHeader>
     <MatTableRow>
@@ -42,9 +46,13 @@
         <td>@context.StudentCount</td>
     </MatTableRow>
 </MatTable>
+<MatPaginator PageSize="Pagenator.PageSize" Page="OnPage">
+
+</MatPaginator>
 
 @code {
     MatPaginator matTablePagenator { get; set; } = null;
+    private const string FilterColumn = nameof(GetGroupViewModel.Name);
 
     [Inject]
 
@@ -98,6 +106,29 @@
             await GetData();
         }
     }
+
+    private async Task OnPage(MatPaginatorPageEvent e)
+    {
+        Pagenator.PageIndex = e.PageIndex;
+        Pagenator.PageSize = e.PageSize;
+        await GetData();
+    }
+
+    private async Task SerchingFieldChange(string value)
+    {
+        Pagenator.FilterRequests = new List<FilterRequest>()
+        {
+            new FilterRequest()
+            {
+                FilterColumn = FilterColumn,
+                FilterQuery = value,
+                IsPartFilter = true
+            }
+        };
+
+        await GetData();
+    }
+
 
     protected override async Task OnInitializedAsync()
     {

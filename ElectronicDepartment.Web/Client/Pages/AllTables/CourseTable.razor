@@ -3,9 +3,8 @@
 @using ElectronicDepartment.Web.Shared
 @using ElectronicDepartment.Web.Shared.Common
 @using ElectronicDepartment.Web.Shared.Course.Responce
-
-
 @using static ElectronicDepartment.Web.Shared.CafedraController
+
 @inject NavigationManager NavManager
 
 <div class="mat-layout-grid-inner">
@@ -19,18 +18,25 @@
             <MatButton OnClick="@(item => NavManager.NavigateTo($"/manage/Course/"))" Icon="create_new_folder" style="display: flex; justify-content: flex-end">Add</MatButton>
         </AuthorizeView>
     </div>
-</div>и
+</div>
+
+<div>
+    <p>
+        <MatStringField Label="@FilterColumn" @oninput="@(async (ChangeEventArgs e) => await SerchingFieldChange(e.Value.ToString()))"></MatStringField>
+    </p>
+</div>
 
 <MatTable Items="ApiResult.Data"
           class="mat-elevation-z5"
           UseSortHeaderRow="true"
-          ShowPaging="true"
-          FilterByColumnName="Name">
+          ShowPaging="false"
+          @bind-PageSize="@Pagenator.PageSize">
     <MatTableHeader>
         <MatSortHeaderRow SortChanged="@SortData">
-            <MatSortHeader SortId="no">Action</MatSortHeader>
+            <th>Action</th>
             <MatSortHeader SortId="Name">Name</MatSortHeader>
             <MatSortHeader SortId="CreatedAt">CreatedAt</MatSortHeader>
+            <MatSortHeader SortId="Description">Description</MatSortHeader>
         </MatSortHeaderRow>
     </MatTableHeader>
     <MatTableRow>
@@ -43,8 +49,13 @@
     </MatTableRow>
 </MatTable>
 
+<MatPaginator Page="OnPage" @ref="matTablePagenator" @bind-Length="ApiResult.TotalCount">
+
+</MatPaginator>
+
 @code {
     MatPaginator matTablePagenator { get; set; } = null;
+    private const string FilterColumn = nameof(GetCourseViewModel.Name);
 
     [Inject]
     IHttpService HttpClient { get; set; }
@@ -52,7 +63,7 @@
     public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
         {
             PageIndex = 0,
-            PageSize = 1000,
+            PageSize = 5,
         };
 
     public ApiResultViewModel<GetCourseViewModel> ApiResult { get; set; } = new ApiResultViewModel<GetCourseViewModel>();
@@ -96,6 +107,28 @@
 
             await GetData();
         }
+    }
+
+    private async Task OnPage(MatPaginatorPageEvent e)
+    {
+        Pagenator.PageIndex = e.PageIndex;
+        Pagenator.PageSize = e.PageSize;
+        await GetData();
+    }
+
+    private async Task SerchingFieldChange(string value)
+    {
+        Pagenator.FilterRequests = new List<FilterRequest>()
+        {
+            new FilterRequest()
+            {
+                FilterColumn = FilterColumn,
+                FilterQuery = value,
+                IsPartFilter = true
+            }
+        };
+
+        await GetData();
     }
 
     protected override async Task OnInitializedAsync()

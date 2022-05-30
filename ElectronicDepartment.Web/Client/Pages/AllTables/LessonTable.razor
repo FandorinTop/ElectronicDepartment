@@ -17,17 +17,16 @@
     </div>
 </div>
 
-
 <MatTable Items="ApiResult.Data"
           class="mat-elevation-z5"
           UseSortHeaderRow="true"
-          ShowPaging="true"
-          FilterByColumnName="Name">
+          ShowPaging="false"
+          @bind-PageSize="@Pagenator.PageSize">
     <MatTableHeader>
         <MatSortHeaderRow SortChanged="@SortData">
-            <MatSortHeader SortId="no">Action</MatSortHeader>
-            <MatSortHeader SortId="Name">CourseName</MatSortHeader>
-            <MatSortHeader SortId="CourseTeacher">CourseTeacher</MatSortHeader>
+            <th>Action</th>
+            <th>CourseName</th>
+            <th>CourseTeacher</th>
             <MatSortHeader SortId="LessonStart">LessonStart</MatSortHeader>
             <MatSortHeader SortId="LessonType">LessonType</MatSortHeader>
             <MatSortHeader SortId="Duration">Duration</MatSortHeader>
@@ -46,13 +45,18 @@
         <td>@context.CreatedAt</td>
     </MatTableRow>
 </MatTable>
+<MatPaginator Page="OnPage" @ref="matTablePagenator" @bind-Length="ApiResult.TotalCount">
+
+</MatPaginator>
+
 
 @code {
     MatPaginator matTablePagenator { get; set; } = null;
+    private const string FilterColumn = nameof(GetLessonViewModel.Duration);
 
     [Inject]
-    
-    IHttpService HttpClient { get; set; } 
+
+    IHttpService HttpClient { get; set; }
 
 
     public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
@@ -102,6 +106,28 @@
 
             await GetData();
         }
+    }
+
+    private async Task OnPage(MatPaginatorPageEvent e)
+    {
+        Pagenator.PageIndex = e.PageIndex;
+        Pagenator.PageSize = e.PageSize;
+        await GetData();
+    }
+
+    private async Task SerchingFieldChange(string value)
+    {
+        Pagenator.FilterRequests = new List<FilterRequest>()
+        {
+            new FilterRequest()
+            {
+                FilterColumn = FilterColumn,
+                FilterQuery = value,
+                IsPartFilter = true
+            }
+        };
+
+        await GetData();
     }
 
     protected override async Task OnInitializedAsync()

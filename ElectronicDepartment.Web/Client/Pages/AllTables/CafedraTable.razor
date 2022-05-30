@@ -7,8 +7,6 @@
 @using static ElectronicDepartment.Web.Shared.CafedraController
 @inject NavigationManager NavigationManager
 
-
-
 <div class="mat-layout-grid-inner">
     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
         <h3>CafedraTable</h3>
@@ -22,14 +20,20 @@
     </AuthorizeView>
 </div>
 
+<div>
+    <p>
+        <MatStringField Label="@FilterColumn" @oninput="@(async (ChangeEventArgs e) => await SerchingFieldChange(e.Value.ToString()))"></MatStringField>
+    </p>
+</div>
+
 <MatTable Items="ApiResult.Data"
           class="mat-elevation-z5"
           UseSortHeaderRow="true"
-          ShowPaging="true"
-          FilterByColumnName="Name">
+          ShowPaging="false"
+          @bind-PageSize="@Pagenator.PageSize">
     <MatTableHeader>
         <MatSortHeaderRow SortChanged="@SortData">
-            <MatSortHeader SortId="no">Action</MatSortHeader>
+            <th>Action</th>
             <MatSortHeader SortId="Name">Name</MatSortHeader>
             <MatSortHeader SortId="Phone">Phone</MatSortHeader>
             <MatSortHeader SortId="Description">Description</MatSortHeader>
@@ -45,7 +49,12 @@
     </MatTableRow>
 </MatTable>
 
+<MatPaginator Page="OnPage" @ref="matTablePagenator" @bind-Length="ApiResult.TotalCount">
+
+</MatPaginator>
+
 @code {
+    private const string FilterColumn = nameof(GetCafedraViewModel.Name);
     MatPaginator matTablePagenator { get; set; } = null;
 
     [Inject]
@@ -55,7 +64,7 @@
     public GetApiBodyRequest Pagenator { get; set; } = new GetApiBodyRequest()
         {
             PageIndex = 0,
-            PageSize = 1000,
+            PageSize = 5,
         };
 
     public ApiResultViewModel<GetCafedraViewModel> ApiResult { get; set; } = new ApiResultViewModel<GetCafedraViewModel>();
@@ -99,6 +108,28 @@
 
             await GetData();
         }
+    }
+
+    private async Task OnPage(MatPaginatorPageEvent e)
+    {
+        Pagenator.PageIndex = e.PageIndex;
+        Pagenator.PageSize = e.PageSize;
+        await GetData();
+    }
+
+    private async Task SerchingFieldChange(string value)
+    {
+        Pagenator.FilterRequests = new List<FilterRequest>()
+        {
+            new FilterRequest()
+            {
+                FilterColumn = FilterColumn,
+                FilterQuery = value,
+                IsPartFilter = true
+            }
+        };
+
+        await GetData();
     }
 
     protected override async Task OnInitializedAsync()

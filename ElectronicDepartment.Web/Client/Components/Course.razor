@@ -10,13 +10,6 @@
 @inject NavigationManager NavManager
 @attribute [Authorize(Roles = "admin, teacher, manager")]
 
-<head>
-
-    <base href="~/" />
-
-</head>
-
-
 <MatDialog @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle>
         Create Lesson

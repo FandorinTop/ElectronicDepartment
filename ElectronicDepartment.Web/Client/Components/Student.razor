@@ -54,7 +54,7 @@
                         <MatAutocompleteList Context="group" Items="@GroupSelectors" TItem="GetGroupSelectorViewModel" Label="Select group" CustomStringSelector="@(i => i.Name)" @bind-Value="@SelectedGroup" @onchange="OnNullGroup">
                             <ItemTemplate>
                                 <div style="display: flex; flex-direction: row; width: 100%;">
-                                    <div style="flex: 1;">@group.Name</div>
+                                    <div style="flex: 1;">@group?.Name</div>
                                 </div>
                             </ItemTemplate>
                         </MatAutocompleteList>

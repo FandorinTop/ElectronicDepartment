@@ -7,7 +7,7 @@
 @using ElectronicDepartment.Web.Shared.Cafedra.Responce
 @attribute [Authorize(Roles = "admin, manager")]
 
-<EditForm Context="mod" Model="Model" OnSubmit="Success">
+<EditForm Context="mod" Model="Model" OnValidSubmit="Success">
     <DataAnnotationsValidator />
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">

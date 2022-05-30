@@ -5,7 +5,7 @@
 @using System.Net.Http.Headers
 @attribute [Authorize(Roles = "admin, manager")]
 
-<EditForm Context="con" Model="Model" OnSubmit="Success">
+<EditForm Context="con" Model="Model" OnValidSubmit="Success">
     <DataAnnotationsValidator />
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
